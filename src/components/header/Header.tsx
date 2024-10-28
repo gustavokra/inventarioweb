@@ -21,7 +21,6 @@ export default function Header() {
             <nav className='flex items-center justify-between'>
                 <img src={LogoIcon} alt='Logo inventário web' width={220} height={80} />
                 
-                {/* Menu desktop */}
                 <div className='hidden md:flex'>
                     <ul className='flex gap-x-10'>
                         {localStorage.getItem('token') ? (
