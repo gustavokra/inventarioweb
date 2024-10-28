@@ -1,21 +1,20 @@
 import { Button } from "@/components/ui/button";
-import './ClientCadaster.css'
-import { useNavigate } from "react-router-dom";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 
-export default function Clients() {
+export default function SuplierCadaster() {
 
     const navigate = useNavigate();
 
     const returnToList = () => {
-        navigate("/clients")
+        navigate("/supliers")
     }
 
     return (
         <section id="clients" className="container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
             <header>
-                <h3>Cadastro de clientes</h3>
+                <h3>Cadastro de fornecedores</h3>
             </header>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

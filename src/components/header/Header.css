@@ -55,7 +55,8 @@ a {
 }
 
 .brackgound {
-    background-color: white;
+    background-color: #343A40;
+    color: #F8F9FA;
     z-index: 1;
 }
 

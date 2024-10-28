@@ -41,7 +41,7 @@ h1,
 h2,
 h3 {
     line-height: 1.2;
-    color: var(--primary);
+    color: #343A40;
     font-weight: var(--fw-bold);
     letter-spacing: -0.04em;
 }
@@ -76,16 +76,6 @@ img {
 
 ul {
     list-style: none;
-}
-
-label {
-    color: var(--text-color)
-}
-
-input {
-    padding: var(--py-esm);
-    border-radius: 0.5rem;
-    border: solid 1px;
 }
 
 @media (width >=1280px) {
@@ -172,7 +162,6 @@ input {
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
-        --text-color: #000;
     }
 }
 

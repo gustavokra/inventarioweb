@@ -1,9 +1,9 @@
 export enum EnumPaginas {
     'clients' = 'clients',
-    'fornecedores' = 'fornecedores',
+    'supliers' = 'supliers',
     'products' = 'products',
-    'pedidos' = 'pedidos',
-    'transacoes' = 'transacoes',
+    'orders' = 'orders',
+    'transactions' = 'transactions',
     'login' = 'login',
     'register' = 'register',
 }

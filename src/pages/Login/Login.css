@@ -1,4 +1,5 @@
 #login {
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,12 +14,12 @@
 
     .information {
         box-sizing: border-box;
-        background-color: #ffffff;
         color: var(--second-text-color);
         border-radius: 1rem;
         border-color: solid;
         flex-direction: column;
         width: 90%;
+        padding: 0.5rem;
 
         span {
             display: flex;
@@ -29,8 +30,7 @@
         .actions {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            padding: 1rem;
+            padding: 0.5rem;
         }
     }
 }
@@ -38,7 +38,7 @@
 @media (width >= 1180px) {
     #login {
         .information {
-            width: 40%;
+            width: 30%;
         }
     }
 }

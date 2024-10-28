@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import '@/styles/utility.css';
 import './Login.css';
+import { Label } from '@/components/ui/label';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -42,26 +44,26 @@ export default function Login() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <section id="login">
+            <section id="login" className='mt-10'>
                 <header>
-                    <h1>Login</h1>
+                    <h2>Login</h2>
                 </header>
                 <div className='information'>
                     <span>
-                        <label>Nome:</label>
-                        <input
+                        <Label>Nome:</Label>
+                        <Input
                             id="input_name"
                             placeholder="Digite seu nome"
                             onChange={(e) => setName(e.target.value)}
-                        ></input>
+                        ></Input>
                     </span>
                     <span>
-                        <label>Senha:</label>
-                        <input
+                        <Label>Senha:</Label>
+                        <Input
                             id="input_password"
                             type='password'
                             placeholder="Digite sua senha"
-                            onChange={(e) => setPassword(e.target.value)}></input>
+                            onChange={(e) => setPassword(e.target.value)}></Input>
                     </span>
                     <div className="actions">
                         <Button type='submit' variant="default" size={'submit'}>Logar</Button>
