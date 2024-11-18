@@ -1,42 +1,42 @@
-import { IClient } from "@/@types/IClient";
+import { ISupplier } from "@/@types/ISupplier";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useSupplier } from "@/context/SupplierContext";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useClient } from "../../context/ClientContext";
 
-export default function Clients() {
+export default function SupplierCadaster() {
     const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [document, setDocument] = useState('');
     const [contact, setContact] = useState('');
     const [address, setAddress] = useState('');
     const [active, setActive] = useState(true);
-    const { client, setClient } = useClient();
+    const { supplier, setSupplier } = useSupplier();
 
     const navigate = useNavigate();
 
     const returnToList = () => {
-        setClient(null)
-        navigate("/clients")
+        setSupplier(null)
+        navigate("/suppliers")
     }
 
     useEffect(() => {
-        if (client) {
-            setId(client.id ? client.id : 0)
-            setName(client.name);
-            setDocument(client.document);
-            setContact(client.contact);
-            setAddress(client.address);
-            setActive(client.active);
+        if (supplier) {
+            setId(supplier.id ? supplier.id : 0)
+            setName(supplier.name);
+            setDocument(supplier.document);
+            setContact(supplier.contact);
+            setAddress(supplier.address);
+            setActive(supplier.active);
         }
-    }, [client]);
+    }, [supplier]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const clientData: IClient = {
+        const supplierData: ISupplier = {
             name,
             document,
             contact,
@@ -44,21 +44,21 @@ export default function Clients() {
             active,
         };
 
-        client ? updateClient(clientData) : registerClient(clientData)
-        setClient(null);
-        navigate('/clients');
+        supplier ? updateSupplier(supplierData) : registerSupplier(supplierData)
+        setSupplier(null);
+        navigate('/suppliers');
     };
 
-    const registerClient = async (clientDataToRegister: IClient) => {
+    const registerSupplier = async (supplierDataToRegister: ISupplier) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },
-                body: JSON.stringify(clientDataToRegister),
+                body: JSON.stringify(supplierDataToRegister),
             });
 
             if (!response.ok) {
@@ -71,22 +71,22 @@ export default function Clients() {
         }
     }
 
-    const updateClient = async (clientDataToUpdate: IClient) => {
+    const updateSupplier = async (supplierDataToUpdate: ISupplier) => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'id': String(client ? client.id : 0)
+                    'id': String(supplier ? supplier.id : 0)
                 },
-                body: JSON.stringify(clientDataToUpdate)
+                body: JSON.stringify(supplierDataToUpdate)
             });
 
             if (!response.ok) {
-                throw new Error("Erro atualizar cliente");
+                throw new Error("Erro atualizar fornecedor");
             }
 
         } catch (err: unknown) {
@@ -94,24 +94,24 @@ export default function Clients() {
         }
     };
 
-    const deleteClient = async () => {
+    const deleteSupplier = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'id': String(client ? client.id : 0)
+                    'id': String(supplier ? supplier.id : 0)
                 }
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao deletar cliente");
+                throw new Error("Erro ao deletar fornecedor");
             }
 
-            navigate('/clients');
+            navigate('/suppliers');
 
         } catch (err: unknown) {
             console.log(err);
@@ -119,18 +119,17 @@ export default function Clients() {
     };
 
     return (
-        <section id="clients" className="container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
+        <section id="suppliers" className="container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
             <header>
-                <h3>Cadastro de cliente</h3>
-                {client &&
+                <h3>Cadastro de Fornecedor</h3>
+                {supplier &&
                     <div className="flex justify-end">
                         <Button variant='destructive'
-                            onClick={deleteClient}>
+                            onClick={deleteSupplier}>
                             Excluir
                         </Button>
                     </div>
                 }
-
             </header>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -165,7 +164,7 @@ export default function Clients() {
                     <Button className="md:w-1/4 order-2 md:order-1" variant="destructive"
                         onClick={() => returnToList()}>
                         Voltar para lista</Button>
-                    <Button className="md:w-3/4 order-1 md:order-2" variant="default">{client ? 'Atualizar Cliente' : 'Cadastrar'}</Button>
+                    <Button className="md:w-3/4 order-1 md:order-2" variant="default">{supplier ? 'Atualizar Fornecedor' : 'Cadastrar'}</Button>
                 </div>
             </form>
         </section>

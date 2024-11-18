@@ -9,18 +9,18 @@ import { Label } from '@/components/ui/label';
 
 export default function Login() {
     const navigate = useNavigate();
-    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const userData = {
-            name,
+            email,
             password,
         };
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/user/login', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function Login() {
                         <Input
                             id="input_name"
                             placeholder="Digite seu nome"
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                         ></Input>
                     </span>
                     <span>

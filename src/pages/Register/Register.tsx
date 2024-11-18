@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom';
-import './Register.css'
-import '@/styles/utility.css'
-import { Label } from '@radix-ui/react-label';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertDestructive } from '@/components/AlertDestructive/AlertDestructive';
+import '@/styles/utility.css';
+import { Label } from '@radix-ui/react-label';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Register.css';
+import { useToast } from '@/hooks/use-toast';
+
 
 export default function Register() {
     const navigate = useNavigate();
-    const [showMessage, setShowMessage] = useState(true);
+    const [message, setMessage] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -23,10 +25,11 @@ export default function Register() {
             email,
             password,
             confirmPassword,
+            roles: ['USER', 'ADMIN']
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/user/cadaster', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,12 +40,11 @@ export default function Register() {
 
             if (!response.ok) {
                 console.log(response.status)
-                setShowMessage(true)
+                setMessage("Erro ao cadastrar usuário")
                 throw new Error(`Erro: ${response.status}`);
             }
 
-            const data = await response.json();
-            console.log('Usuário cadastrado com sucesso:', data);
+            setMessage("Usuário cadastrado com sucesso:")
             navigate('/login');
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);
@@ -74,29 +76,29 @@ export default function Register() {
                                 id="input_email"
                                 placeholder="Digite seu e-mail"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} // Atualiza o estado ao digitar
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </span>
                         <span>
                             <Label>Senha:</Label>
                             <Input
-                                type="password" // Adicione type="password" para ocultar a senha
+                                type="password"
                                 name='input_password'
                                 id="input_password"
                                 placeholder="Digite sua senha"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)} // Atualiza o estado ao digitar
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </span>
                         <span>
                             <Label>Confirmar Senha:</Label>
                             <Input
-                                type="password" // Adicione type="password" para ocultar a senha
+                                type="password"
                                 name='input_confirm_password'
                                 id="input_confirm_password"
                                 placeholder="Confirme sua senha"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)} // Atualiza o estado ao digitar
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                         </span>
                         <div className="actions">
@@ -105,10 +107,6 @@ export default function Register() {
                     </div>
                 </section>
             </form>
-
-            {/* {showMessage ? 
-            <AlertDestructive  title='Erro' message='Erro ao cadastrar usuário' />
-            : <></>} */}
             
         </>
     );

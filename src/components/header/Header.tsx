@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { EnumPaginas } from '@/@types/EnumPaginas';
@@ -26,7 +26,7 @@ export default function Header() {
                         {localStorage.getItem('token') ? (
                             <>
                                 <li><Link to={EnumPaginas.clients}>Clientes</Link></li>
-                                <li><Link to={EnumPaginas.supliers}>Fornecedores</Link></li>
+                                <li><Link to={EnumPaginas.suppliers}>Fornecedores</Link></li>
                                 <li><Link to={EnumPaginas.products}>Produtos</Link></li>
                                 <li><Link to={EnumPaginas.orders}>Pedidos</Link></li>
                                 <li><Link to={EnumPaginas.transactions}>Transações</Link></li>
@@ -54,7 +54,7 @@ export default function Header() {
                                 {localStorage.getItem('token') ? (
                                     <>
                                         <li><Link to={EnumPaginas.clients} onClick={() => setShowMobileMenu(false)}>Clientes</Link></li>
-                                        <li><Link to={EnumPaginas.supliers} onClick={() => setShowMobileMenu(false)}>Fornecedores</Link></li>
+                                        <li><Link to={EnumPaginas.suppliers} onClick={() => setShowMobileMenu(false)}>Fornecedores</Link></li>
                                         <li><Link to={EnumPaginas.products} onClick={() => setShowMobileMenu(false)}>Produtos</Link></li>
                                         <li><Link to={EnumPaginas.orders} onClick={() => setShowMobileMenu(false)}>Pedidos</Link></li>
                                         <li><Link to={EnumPaginas.transactions} onClick={() => setShowMobileMenu(false)}>Transações</Link></li>

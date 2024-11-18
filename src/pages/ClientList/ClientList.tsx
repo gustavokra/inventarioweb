@@ -1,43 +1,85 @@
-import { useState } from "react";
+import { IClient } from "@/@types/IClient";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useClient } from "../../context/ClientContext";
 
-interface Client {
-  nome: string;
-  cpfCnpj: string;
-  contato: string;
-  endereco: string;
-}
-
-const initialClients: Client[] = [
-  { nome: "João Silva", cpfCnpj: "123.456.789-00", contato: "(11) 98765-4321", endereco: "Rua das Flores, 123 - São Paulo, SP" },
-  { nome: "Maria Oliveira", cpfCnpj: "987.654.321-00", contato: "(21) 91234-5678", endereco: "Avenida Brasil, 456 - Rio de Janeiro, RJ" },
-  { nome: "Carlos Pereira", cpfCnpj: "456.789.123-00", contato: "(31) 99876-5432", endereco: "Rua Minas Gerais, 789 - Belo Horizonte, MG" },
-  { nome: "Ana Costa", cpfCnpj: "321.654.987-00", contato: "(41) 91234-8765", endereco: "Rua Paraná, 101 - Curitiba, PR" },
-  { nome: "Paulo Santos", cpfCnpj: "654.321.987-00", contato: "(51) 98765-1234", endereco: "Avenida dos Andradas, 303 - Porto Alegre, RS" },
-  { nome: "Roberta Lima", cpfCnpj: "789.123.456-00", contato: "(71) 99876-2345", endereco: "Praça da Sé, 202 - Salvador, BA" },
-  { nome: "Luiz Souza", cpfCnpj: "321.987.654-00", contato: "(81) 97654-3210", endereco: "Rua Recife, 505 - Recife, PE" },
-];
 
 export function ClientList() {
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const [clients, setClients] = useState<IClient[]>([]);
   const [nameFilter, setNameFilter] = useState<string>("");
-  const [cpfCnpjFilter, setCpfCnpjFilter] = useState<string>("");
+  const [documentFilter, setdocumentFilter] = useState<string>("");
+  const [reload, setReload] = useState(false);
+  const { setClient } = useClient();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'dbImpl': 'SQLITE',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar os dados");
+        }
+        setClients(await response.json());
+      } catch (err: unknown) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [reload]);
 
   const handleCadaster = () => {
     navigate("/clients/cadaster");
   };
 
-  const handleRemove = (cpfCnpj: string) => {
-    setClients(clients.filter(client => client.cpfCnpj !== cpfCnpj));
+  const handleEdit = (client: IClient) => {
+    setClient(client);
+    navigate("/clients/cadaster");
+  }
+
+  const handleChangeStatus = async (client: IClient) => {
+    const newClientActiveStatus = client.active ? false : true
+
+    const clientDataToUpdate = {
+      active: newClientActiveStatus
+    }
+
+    try {
+      const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'dbImpl': 'SQLITE',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+          'id': String(client.id)
+        },
+        body: JSON.stringify(clientDataToUpdate)
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar os dados");
+      }
+
+      setReload((prev) => !prev);
+    } catch (err: unknown) {
+      console.log(err);
+    }
   };
 
-  const filteredClients = clients.filter(client => 
-    client.nome.toLowerCase().includes(nameFilter.toLowerCase()) &&
-    client.cpfCnpj.includes(cpfCnpjFilter)
+  const filteredClients = clients.filter(client =>
+    client.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+    client.document.includes(documentFilter)
   );
 
   return (
@@ -57,39 +99,41 @@ export function ClientList() {
         <Input
           type="text"
           placeholder="Filtrar por CPF/CNPJ"
-          value={cpfCnpjFilter}
-          onChange={(e) => setCpfCnpjFilter(e.target.value)}
+          value={documentFilter}
+          onChange={(e) => setdocumentFilter(e.target.value)}
         />
       </div>
 
-      <Table className="mx-auto my-auto">
+      <Table>
         <TableCaption>Uma lista de seus clientes.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-2/12 text-left">Nome</TableHead>
             <TableHead className="w-2/12 text-left">CPF/CNPJ</TableHead>
             <TableHead className="w-2/12 text-left">Contato</TableHead>
-            <TableHead className="w-6/12 text-left">Endereço</TableHead>
+            <TableHead className="w-3/12 text-left">Endereço</TableHead>
+            <TableHead className="w-2/12 text-center">Ativo</TableHead>
             <TableHead className="w-1/12 text-center">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredClients.map((client) => (
-            <TableRow key={client.cpfCnpj}>
-              <TableCell className="font-medium">{client.nome}</TableCell>
-              <TableCell>{client.cpfCnpj}</TableCell>
-              <TableCell>{client.contato}</TableCell>
-              <TableCell className="text-left">{client.endereco}</TableCell>
+            <TableRow key={client.document}>
+              <TableCell className="font-medium">{client.name}</TableCell>
+              <TableCell>{client.document}</TableCell>
+              <TableCell>{client.contact}</TableCell>
+              <TableCell className="text-left">{client.address}</TableCell>
+              <TableCell className="text-center">{client.active ? "Sim" : "Não"}</TableCell>
               <TableCell className="flex justify-center gap-3">
-                <Button variant="default" className="w-2/6" onClick={handleCadaster}>Editar</Button>
-                <Button variant="destructive" className="w-2/6" onClick={() => handleRemove(client.cpfCnpj)}>Excluir</Button>
+                <Button variant="destructive" className="w-8/6" onClick={() => handleChangeStatus(client)}> {client.active ? 'Desativar' : 'Ativar'}</Button>
+                <Button variant="default" className="w-4/12" onClick={() => handleEdit(client)}>Editar</Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={4}>Total</TableCell>
+            <TableCell colSpan={5}>Total</TableCell>
             <TableCell className="text-right">{filteredClients.length} clientes</TableCell>
           </TableRow>
         </TableFooter>
