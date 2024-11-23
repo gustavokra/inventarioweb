@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useClient } from "../../context/ClientContext";
+import { useClient } from "@/context/ClientContext";
 
 export default function Clients() {
     const [id, setId] = useState(0);

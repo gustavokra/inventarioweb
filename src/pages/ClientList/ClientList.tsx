@@ -49,7 +49,7 @@ export function ClientList() {
   }
 
   const handleChangeStatus = async (client: IClient) => {
-    const newClientActiveStatus = client.active ? false : true
+    const newClientActiveStatus = !client.active
 
     const clientDataToUpdate = {
       active: newClientActiveStatus

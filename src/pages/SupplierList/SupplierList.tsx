@@ -11,6 +11,8 @@ export function SupplierList() {
     const [nameFilter, setNameFilter] = useState<string>("");
     const [documentFilter, setDocumentFilter] = useState<string>("");
     const [reload, setReload] = useState(false);
+    const [nameSortOrder, setNameSortOrder] = useState<"asc" | "desc">("asc");
+
     const { setSupplier } = useSupplier();
     const navigate = useNavigate();
 
@@ -81,6 +83,20 @@ export function SupplierList() {
         supplier.document.includes(documentFilter)
     );
 
+
+    const sortSuppliersByName = (order: "asc" | "desc") => {
+        const sortedSuppliers = [...filteredSuppliers].sort((a, b) => {
+            if (order === "asc") {
+                return a.name.localeCompare(b.name);
+            } else {
+                return b.name.localeCompare(a.name);
+            }
+        });
+        return sortedSuppliers;
+    };
+    const sortedSuppliers = sortSuppliersByName(nameSortOrder);
+
+
     return (
         <section id="supplier_list" className="container flex flex-col gap-4 w-10/12 mt-4 ">
             <div className="flex justify-between mb-4">
@@ -101,10 +117,13 @@ export function SupplierList() {
                     value={documentFilter}
                     onChange={(e) => setDocumentFilter(e.target.value)}
                 />
+                <Button onClick={() => setNameSortOrder(nameSortOrder === "asc" ? "desc" : "asc")}>
+                    Nome {nameSortOrder === "asc" ? "↑" : "↓"}
+                </Button>
             </div>
 
             <Table>
-                <TableCaption>Uma lista de seus supplieres.</TableCaption>
+                <TableCaption>Uma lista de seus fornecedores.</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-2/12 text-left">Nome</TableHead>
@@ -116,7 +135,7 @@ export function SupplierList() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredSuppliers.map((supplier) => (
+                    {sortedSuppliers.map((supplier) => (
                         <TableRow key={supplier.document}>
                             <TableCell className="font-medium">{supplier.name}</TableCell>
                             <TableCell>{supplier.document}</TableCell>

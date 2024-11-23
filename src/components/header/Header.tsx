@@ -20,7 +20,7 @@ export default function Header() {
         <header className='py-sm bg-gray-600 text-white px-10'>
             <nav className='flex items-center justify-between'>
                 <img src={LogoIcon} alt='Logo inventário web' width={220} height={80} />
-                
+
                 <div className='hidden md:flex'>
                     <ul className='flex gap-x-10'>
                         {localStorage.getItem('token') ? (
@@ -38,11 +38,14 @@ export default function Header() {
                             </>
                         )}
                     </ul>
+
                 </div>
 
-                {localStorage.getItem('token') && (
-                    <Button variant='destructive' onClick={logout}>Logout</Button>
-                )}
+                <div className='hidden md:flex'>
+                    {localStorage.getItem('token') && (
+                        <Button variant='destructive' onClick={logout}>Logout</Button>
+                    )}
+                </div>
 
                 <div className='md:hidden'>
                     <span onClick={() => setShowMobileMenu(!showMobileMenu)} className='btn-wrapper'>
