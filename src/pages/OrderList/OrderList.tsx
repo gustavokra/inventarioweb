@@ -8,10 +8,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
 import React from 'react';
+import FormatDate from '@/util/FormatDate';
 
 export default function ClientList() {
     const [orders, setOrders] = useState<IOrder[]>([]);
-    const [createdAtFilter, setDateFilter] = useState<string>('');
+    const [createdAtFilter, setCreatedAtFilter] = useState<string>('');
     const [clientFilter, setClientFilter] = useState<string>('');
     const [productFilter, setProductFilter] = useState<string>('');
     const [enumStatusFilter, setStatusFilter] = useState<string>('');
@@ -86,16 +87,18 @@ export default function ClientList() {
     };
 
     const filteredOrders = orders.filter(order => {
+        const formattedDate = order.createdAt ? FormatDate(order.createdAt) : '';
+
         let hasMatchingProduct = order.items?.some(item =>
             item.product.name.toLowerCase().includes(productFilter.toLowerCase())
         );
 
         let orderStatus = order.enumStatus.toString() === "PENDING" ? "pendente" : "concluído";
 
-        return order.createdAt?.includes(createdAtFilter) &&
+        return formattedDate.toLowerCase().includes(createdAtFilter.toLowerCase()) &&
 
-            order.client.name.toLowerCase().includes(clientFilter.toLowerCase()) ||
-            order.client.document.toLowerCase().includes(clientFilter.toLowerCase()) &&
+            (order.client.name.toLowerCase().includes(clientFilter.toLowerCase()) ||
+            order.client.document.toLowerCase().includes(clientFilter.toLowerCase())) &&
 
             orderStatus.includes(enumStatusFilter.toLowerCase()) &&
 
@@ -114,7 +117,7 @@ export default function ClientList() {
                     type='text'
                     placeholder='Filtrar por data'
                     value={createdAtFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
+                    onChange={(e) => setCreatedAtFilter(e.target.value)}
                 />
                 <Input
                     type='text'
@@ -140,6 +143,7 @@ export default function ClientList() {
                 <TableCaption>Uma lista de seus pedidos.</TableCaption>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className='w-1/12 text-left'>Id</TableHead>
                         <TableHead className='w-2/12 text-left'>Criação</TableHead>
                         <TableHead className='w-4/12 text-left'>Cliente</TableHead>
                         <TableHead className='w-3/12 text-right'>Total Pedido (R$)</TableHead>
@@ -150,8 +154,9 @@ export default function ClientList() {
                 <TableBody>
                     {filteredOrders.map((order) => (
                         <React.Fragment key={order.id}>
-                            <TableRow  onClick={() => toggleOrderItems(order.id ? order.id : 0)} style={{ cursor: 'pointer' }}>
-                                <TableCell className="text-left">{order.createdAt}</TableCell>
+                            <TableRow onClick={() => toggleOrderItems(order.id ? order.id : 0)} style={{ cursor: 'pointer' }}>
+                                <TableCell className='text-left'>{order.id}</TableCell>
+                                <TableCell className="text-left">{FormatDate(order.createdAt)}</TableCell>
                                 <TableCell className="text-left">{order.client.name} - {order.client.document}</TableCell>
                                 <TableCell className="text-right">{order.totalValue?.toFixed(2).replace('.', ',')}</TableCell>
                                 <TableCell className="text-center">
@@ -179,7 +184,7 @@ export default function ClientList() {
 
                             {expandedOrderId === order.id && (
                                 <TableRow key={order.id + "items"}>
-                                    <TableCell colSpan={5} className="p-4">
+                                    <TableCell colSpan={6} className="p-4">
                                         <div className="bg-gray-100 p-3 rounded">
                                             <h4 className="font-semibold mb-2">Itens do Pedido:</h4>
                                             <Table>
@@ -213,7 +218,7 @@ export default function ClientList() {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={4}>Total</TableCell>
+                        <TableCell colSpan={5}>Total</TableCell>
                         <TableCell className='text-right'>{filteredOrders.length} {filteredOrders.length > 1 ? 'Pedidos' : 'Pedido'} </TableCell>
                     </TableRow>
                 </TableFooter>

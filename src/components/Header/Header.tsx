@@ -30,6 +30,7 @@ export default function Header() {
                                 <li><Link to={EnumPaginas.products}>Produtos</Link></li>
                                 <li><Link to={EnumPaginas.orders}>Pedidos</Link></li>
                                 <li><Link to={EnumPaginas.transactions}>Transações</Link></li>
+                                <li><Link to={EnumPaginas.transactions}>Relatórios</Link></li>
                             </>
                         ) : (
                             <>

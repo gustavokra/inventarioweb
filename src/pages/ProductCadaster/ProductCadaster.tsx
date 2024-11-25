@@ -18,6 +18,7 @@ export default function ProductCadaster() {
     const [supplier, setSupplier] = useState<ISupplier>();
     const [image, setImage] = useState('');
     const [active, setActive] = useState(true);
+    const admin = localStorage.getItem('admin') === 'true';
     const { product, setProduct } = useProduct();
 
     const navigate = useNavigate();
@@ -167,12 +168,14 @@ export default function ProductCadaster() {
             <header>
                 <h3>Cadastro de Produto</h3>
                 {product &&
+                    admin ?
                     <div className="flex justify-end">
                         <Button variant='destructive'
                             onClick={deleteProduct}>
                             Excluir
                         </Button>
                     </div>
+                    : null
                 }
             </header>
             <form onSubmit={handleSubmit}>
@@ -223,14 +226,14 @@ export default function ProductCadaster() {
                     </div>
                     <div className="md:col-span-2">
                         <Label htmlFor="price">Preço (R$):</Label>
-                        <Input id="price" maxLength={10} className="w-full" 
+                        <Input id="price" maxLength={10} className="w-full"
                             placeholder="Digite o preço"
-                            value={price.toFixed(2).replace('.',',')}
+                            value={price.toFixed(2).replace('.', ',')}
                             onChange={(e) => setPrice(e.target.value ? parseFloat(e.target.value) : 1.0)} />
                     </div>
                     <div className="md:col-span-2">
                         <Label htmlFor="quantity">Quantidade:</Label>
-                        <Input id="quantity" type="number" maxLength={10} className="w-full" 
+                        <Input id="quantity" type="number" maxLength={10} className="w-full"
                             placeholder="Digite a quantidade"
                             value={quantity}
                             onChange={(e) => setQuantity(e.target.value ? parseInt(e.target.value) : 1)}

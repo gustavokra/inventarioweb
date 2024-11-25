@@ -15,7 +15,7 @@ export default function ProductList() {
     const [supplierFilter, setsupplierNameFilter] = useState<string>('');
     const [sortPriceOrder, setSortPriceOrder] = useState<'asc' | 'desc'>('asc');
     const [reload, setReload] = useState(false);
-
+    const admin = localStorage.getItem('admin') === 'true' ;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -103,7 +103,7 @@ export default function ProductList() {
         <section id='product_list' className='container flex flex-col gap-4 w-10/12 mt-4 '>
             <div className='flex justify-between mb-4'>
                 <h3>Produtos</h3>
-                <Button onClick={handleCadaster}>Cadastrar</Button>
+                {admin ? <Button onClick={handleCadaster}>teste</Button> : <></>}
             </div>
 
             <div className='flex md:flex-row gap-4 w-full md:w-1/2'>
@@ -155,8 +155,8 @@ export default function ProductList() {
                                 />
                             </TableCell>
                             <TableCell className='flex justify-center gap-3 justify-center'>
-                                <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(product)}> {product.active ? 'Desativar' : 'Ativar'}</Button>
-                                <Button variant='default' className='w-5/12' onClick={() => handleEdit(product)}>Editar</Button>
+                                <Button variant='destructive' className={admin ? 'w-5/12' : 'w-full'} onClick={() => handleChangeStatus(product)}> {product.active ? 'Desativar' : 'Ativar'}</Button>
+                                {admin ? <Button variant='default' className='w-5/12' onClick={() => handleEdit(product)}>Editar</Button> : null }
                             </TableCell>
                         </TableRow>
                     ))}

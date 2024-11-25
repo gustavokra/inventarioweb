@@ -13,6 +13,7 @@ export default function SupplierList() {
     const [documentFilter, setDocumentFilter] = useState<string>('');
     const [reload, setReload] = useState(false);
     const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
+    const admin = localStorage.getItem('admin') === 'true' ;
 
     const { setSupplier } = useSupplier();
     const navigate = useNavigate();
@@ -100,7 +101,7 @@ export default function SupplierList() {
         <section id='supplier_list' className='container flex flex-col gap-4 w-10/12 mt-4 '>
             <div className='flex justify-between mb-4'>
                 <h3>Fornecedores</h3>
-                <Button onClick={handleCadaster}>Cadastrar</Button>
+                {admin ? <Button onClick={handleCadaster}>Cadastrar</Button> : null}
             </div>
 
             <div className='flex md:flex-row gap-4 w-full md:w-1/2'>
@@ -148,8 +149,8 @@ export default function SupplierList() {
                                 />
                             </TableCell>
                             <TableCell className='flex justify-center gap-3'>
-                                <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
-                                <Button variant='default' className='w-5/12' onClick={() => handleEdit(supplier)}>Editar</Button>
+                                <Button variant='destructive' className={admin ? 'w-5/12' : 'w-full' } onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
+                                {admin ? <Button variant='default' className='w-5/12' onClick={() => handleEdit(supplier)}>Editar</Button> : null}
                             </TableCell>
                         </TableRow>
                     ))}

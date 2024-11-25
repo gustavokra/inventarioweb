@@ -36,6 +36,7 @@ export default function Login() {
             const data = await response.json();
             console.log('Usuário logado com sucesso:', data);
             localStorage.setItem('token', data.token);
+            localStorage.setItem('admin', data.admin);
             navigate('/clients');
         } catch (error) {
             console.error('Erro ao logar usuário:', error);

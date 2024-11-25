@@ -13,6 +13,7 @@ export default function ClientCadaster() {
     const [contact, setContact] = useState('');
     const [address, setAddress] = useState('');
     const [active, setActive] = useState(true);
+    const admin = localStorage.getItem('admin') === 'true';
     const { client, setClient } = useClient();
 
     const navigate = useNavigate();
@@ -134,12 +135,14 @@ export default function ClientCadaster() {
             <header>
                 <h3>Cadastro de cliente</h3>
                 {client &&
+                    admin ?
                     <div className='flex justify-end'>
                         <Button variant='destructive'
                             onClick={deleteClient}>
                             Excluir
                         </Button>
                     </div>
+                    : null
                 }
 
             </header>

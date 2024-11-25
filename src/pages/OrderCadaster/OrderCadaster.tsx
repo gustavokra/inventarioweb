@@ -20,6 +20,7 @@ export default function OrderCadaster() {
     const [id, setId] = useState(0);
     const [client, setClient] = useState<IClient>();
     const [totalValue, setTotalValue] = useState<number>(0);
+    const admin = localStorage.getItem('admin') === 'true';
 
     const [items, setItems] = useState<IOrderItem[]>([]);
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -227,12 +228,14 @@ export default function OrderCadaster() {
             <header>
                 <h3>Cadastro de Pedido</h3>
                 {order &&
+                    admin ? 
                     <div className='flex justify-end'>
                         <Button variant='destructive'
                             onClick={deleteOrder}>
                             Excluir
                         </Button>
                     </div>
+                    : null 
                 }
             </header>
 

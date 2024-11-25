@@ -13,6 +13,7 @@ import ProductList from '@/pages/ProductList/ProductList'
 import Register from '@/pages/Register/Register'
 import SupplierCadaster from '@/pages/SupplierCadaster/SupplierCadaster'
 import SupplierList from '@/pages/SupplierList/SupplierList'
+import TransactionList from '@/pages/TransactionList/TransactionList'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
 const Navigator = () => {
@@ -39,6 +40,8 @@ const Navigator = () => {
 
                 <Route path='/orders' element={isAuthenticated ? <OrderProvider> <OrderList /> </OrderProvider>: <Login />} />
                 <Route path='/orders/cadaster' element={isAuthenticated ? <OrderProvider> <OrderCadaster /> </OrderProvider> : <Login />} />
+            
+                <Route path='/transactions' element={isAuthenticated ? <TransactionList /> : <Login />} />
             </Routes>
         </Router>
     );

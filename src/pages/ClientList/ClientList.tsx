@@ -104,7 +104,6 @@ export default function ClientList() {
           onChange={(e) => setdocumentFilter(e.target.value)}
         />
       </div>
-
       <Table>
         <TableCaption>Uma lista de seus clientes.</TableCaption>
         <TableHeader>
@@ -117,27 +116,30 @@ export default function ClientList() {
             <TableHead className='w-1/12 text-center'>Ações</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {filteredClients.map((client) => (
-            <TableRow key={client.document}>
-              <TableCell className='text-left'>{client.name}</TableCell>
-              <TableCell className='text-left'>{client.document}</TableCell>
-              <TableCell className='text-left'>{client.contact}</TableCell>
-              <TableCell className='text-left'>{client.address}</TableCell>
-              <TableCell className='text-center'>
-                <StatusLabel
-                  isPrimary={client.active}
-                  primaryText='Sim'
-                  secondText='Não'
-                />
-              </TableCell>
-              <TableCell className='flex justify-center gap-3'>
-                <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(client)}> {client.active ? 'Desativar' : 'Ativar'}</Button>
-                <Button variant='default' className='w-5/12' onClick={() => handleEdit(client)}>Editar</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+
+          <TableBody>
+
+            {filteredClients.map((client) => (
+              <TableRow key={client.document}>
+                <TableCell className='text-left'>{client.name}</TableCell>
+                <TableCell className='text-left'>{client.document}</TableCell>
+                <TableCell className='text-left'>{client.contact}</TableCell>
+                <TableCell className='text-left'>{client.address}</TableCell>
+                <TableCell className='text-center'>
+                  <StatusLabel
+                    isPrimary={client.active}
+                    primaryText='Sim'
+                    secondText='Não'
+                  />
+                </TableCell>
+                <TableCell className='flex justify-center gap-3'>
+                  <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(client)}> {client.active ? 'Desativar' : 'Ativar'}</Button>
+                  <Button variant='default' className='w-5/12' onClick={() => handleEdit(client)}>Editar</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+
         <TableFooter>
           <TableRow>
             <TableCell colSpan={5}>Total</TableCell>
