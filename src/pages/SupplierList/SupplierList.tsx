@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { ISupplier } from "@/@types/ISupplier";
-import { useSupplier } from "@/context/SupplierContext";
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
+import { ISupplier } from '@/@types/ISupplier';
+import { useSupplier } from '@/context/SupplierContext';
+import { StatusLabel } from '@/components/StatusLabel';
 
-export function SupplierList() {
+export default function SupplierList() {
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
-    const [nameFilter, setNameFilter] = useState<string>("");
-    const [documentFilter, setDocumentFilter] = useState<string>("");
+    const [nameFilter, setNameFilter] = useState<string>('');
+    const [documentFilter, setDocumentFilter] = useState<string>('');
     const [reload, setReload] = useState(false);
-    const [nameSortOrder, setNameSortOrder] = useState<"asc" | "desc">("asc");
+    const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
 
     const { setSupplier } = useSupplier();
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ export function SupplierList() {
                 });
 
                 if (!response.ok) {
-                    throw new Error("Erro ao buscar os dados");
+                    throw new Error('Erro ao buscar os dados');
                 }
                 setSuppliers(await response.json());
             } catch (err: unknown) {
@@ -41,12 +42,12 @@ export function SupplierList() {
     }, [reload]);
 
     const handleCadaster = () => {
-        navigate("/suppliers/cadaster");
+        navigate('/suppliers/cadaster');
     };
 
     const handleEdit = (supplier: ISupplier) => {
         setSupplier(supplier);
-        navigate("/suppliers/cadaster");
+        navigate('/suppliers/cadaster');
     }
 
     const handleChangeStatus = async (supplier: ISupplier) => {
@@ -69,7 +70,7 @@ export function SupplierList() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao buscar os dados");
+                throw new Error('Erro ao buscar os dados');
             }
 
             setReload((prev) => !prev);
@@ -83,10 +84,9 @@ export function SupplierList() {
         supplier.document.includes(documentFilter)
     );
 
-
-    const sortSuppliersByName = (order: "asc" | "desc") => {
+    const sortSuppliersByName = (order: 'asc' | 'desc') => {
         const sortedSuppliers = [...filteredSuppliers].sort((a, b) => {
-            if (order === "asc") {
+            if (order === 'asc') {
                 return a.name.localeCompare(b.name);
             } else {
                 return b.name.localeCompare(a.name);
@@ -96,29 +96,28 @@ export function SupplierList() {
     };
     const sortedSuppliers = sortSuppliersByName(nameSortOrder);
 
-
     return (
-        <section id="supplier_list" className="container flex flex-col gap-4 w-10/12 mt-4 ">
-            <div className="flex justify-between mb-4">
+        <section id='supplier_list' className='container flex flex-col gap-4 w-10/12 mt-4 '>
+            <div className='flex justify-between mb-4'>
                 <h3>Fornecedores</h3>
                 <Button onClick={handleCadaster}>Cadastrar</Button>
             </div>
 
-            <div className="flex md:flex-row gap-4 w-full md:w-1/2">
+            <div className='flex md:flex-row gap-4 w-full md:w-1/2'>
                 <Input
-                    type="text"
-                    placeholder="Filtrar por Nome"
+                    type='text'
+                    placeholder='Filtrar por Nome'
                     value={nameFilter}
                     onChange={(e) => setNameFilter(e.target.value)}
                 />
                 <Input
-                    type="text"
-                    placeholder="Filtrar por CPF/CNPJ"
+                    type='text'
+                    placeholder='Filtrar por CPF/CNPJ'
                     value={documentFilter}
                     onChange={(e) => setDocumentFilter(e.target.value)}
                 />
-                <Button onClick={() => setNameSortOrder(nameSortOrder === "asc" ? "desc" : "asc")}>
-                    Nome {nameSortOrder === "asc" ? "↑" : "↓"}
+                <Button onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}>
+                    Nome {nameSortOrder === 'asc' ? '↑' : '↓'}
                 </Button>
             </div>
 
@@ -126,25 +125,31 @@ export function SupplierList() {
                 <TableCaption>Uma lista de seus fornecedores.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-2/12 text-left">Nome</TableHead>
-                        <TableHead className="w-2/12 text-left">CPF/CNPJ</TableHead>
-                        <TableHead className="w-2/12 text-left">Contato</TableHead>
-                        <TableHead className="w-3/12 text-left">Endereço</TableHead>
-                        <TableHead className="w-2/12 text-center">Ativo</TableHead>
-                        <TableHead className="w-1/12 text-center">Ações</TableHead>
+                        <TableHead className='w-2/12 text-left'>Nome</TableHead>
+                        <TableHead className='w-2/12 text-left'>CPF/CNPJ</TableHead>
+                        <TableHead className='w-2/12 text-left'>Contato</TableHead>
+                        <TableHead className='w-3/12 text-left'>Endereço</TableHead>
+                        <TableHead className='w-2/12 text-center'>Ativo</TableHead>
+                        <TableHead className='w-1/12 text-center'>Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {sortedSuppliers.map((supplier) => (
                         <TableRow key={supplier.document}>
-                            <TableCell className="font-medium">{supplier.name}</TableCell>
-                            <TableCell>{supplier.document}</TableCell>
-                            <TableCell>{supplier.contact}</TableCell>
-                            <TableCell className="text-left">{supplier.address}</TableCell>
-                            <TableCell className="text-center">{supplier.active ? "Sim" : "Não"}</TableCell>
-                            <TableCell className="flex justify-center gap-3">
-                                <Button variant="destructive" className="w-8/6" onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
-                                <Button variant="default" className="w-4/12" onClick={() => handleEdit(supplier)}>Editar</Button>
+                            <TableCell className='text-left'>{supplier.name}</TableCell>
+                            <TableCell className='text-left'>{supplier.document}</TableCell>
+                            <TableCell className='text-left'>{supplier.contact}</TableCell>
+                            <TableCell className='text-left'>{supplier.address}</TableCell>
+                            <TableCell className='text-center'>
+                                <StatusLabel
+                                    isPrimary={supplier.active}
+                                    primaryText='Sim'
+                                    secondText='Não'
+                                />
+                            </TableCell>
+                            <TableCell className='flex justify-center gap-3'>
+                                <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
+                                <Button variant='default' className='w-5/12' onClick={() => handleEdit(supplier)}>Editar</Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -152,7 +157,7 @@ export function SupplierList() {
                 <TableFooter>
                     <TableRow>
                         <TableCell colSpan={5}>Total</TableCell>
-                        <TableCell className="text-right">{filteredSuppliers.length} fornecedores</TableCell>
+                        <TableCell className='text-right'>{filteredSuppliers.length} fornecedores</TableCell>
                     </TableRow>
                 </TableFooter>
             </Table>

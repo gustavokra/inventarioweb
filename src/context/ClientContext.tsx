@@ -1,5 +1,5 @@
-import { IClient } from "@/@types/IClient";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { IClient } from '@/@types/IClient';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ClientContextType {
   client: IClient | null;
@@ -11,7 +11,7 @@ const ClientContext = createContext<ClientContextType | undefined>(undefined);
 export const useClient = () => {
   const context = useContext(ClientContext);
   if (!context) {
-    throw new Error("useClient must be used within a ClientProvider");
+    throw new Error('useClient must be used within a ClientProvider');
   }
   return context;
 };

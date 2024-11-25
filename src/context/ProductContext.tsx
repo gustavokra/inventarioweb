@@ -1,5 +1,5 @@
-import { IProduct } from "@/@types/IProduct";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { IProduct } from '@/@types/IProduct';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ProductContextType {
   product: IProduct | null;
@@ -11,7 +11,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const useProduct = () => {
   const context = useContext(ProductContext);
   if (!context) {
-    throw new Error("useProduct must be used within a ProductProvider");
+    throw new Error('useProduct must be used within a ProductProvider');
   }
   return context;
 };

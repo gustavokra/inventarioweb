@@ -44,7 +44,7 @@ export default function Login() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <section id="login" className='mt-10'>
+            <section id='login' className='mt-10'>
                 <header>
                     <h2>Login</h2>
                 </header>
@@ -52,21 +52,21 @@ export default function Login() {
                     <span>
                         <Label>Nome:</Label>
                         <Input
-                            id="input_name"
-                            placeholder="Digite seu nome"
+                            id='input_name'
+                            placeholder='Digite seu nome'
                             onChange={(e) => setEmail(e.target.value)}
                         ></Input>
                     </span>
                     <span>
                         <Label>Senha:</Label>
                         <Input
-                            id="input_password"
+                            id='input_password'
                             type='password'
-                            placeholder="Digite sua senha"
+                            placeholder='Digite sua senha'
                             onChange={(e) => setPassword(e.target.value)}></Input>
                     </span>
-                    <div className="actions">
-                        <Button type='submit' variant="default" size={'submit'}>Logar</Button>
+                    <div className='actions'>
+                        <Button type='submit' variant='default' size={'submit'}>Logar</Button>
                     </div>
                 </div>
             </section>

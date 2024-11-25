@@ -40,11 +40,11 @@ export default function Register() {
 
             if (!response.ok) {
                 console.log(response.status)
-                setMessage("Erro ao cadastrar usuário")
+                setMessage('Erro ao cadastrar usuário')
                 throw new Error(`Erro: ${response.status}`);
             }
 
-            setMessage("Usuário cadastrado com sucesso:")
+            setMessage('Usuário cadastrado com sucesso:')
             navigate('/login');
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);
@@ -54,7 +54,7 @@ export default function Register() {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <section id="register" className='mt-10'>
+                <section id='register' className='mt-10'>
                     <header>
                         <h2>Cadastro</h2>
                     </header>
@@ -63,8 +63,8 @@ export default function Register() {
                             <Label>Nome:</Label>
                             <Input
                                 name='input_name'
-                                id="input_name"
-                                placeholder="Digite seu nome"
+                                id='input_name'
+                                placeholder='Digite seu nome'
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                             />
@@ -73,8 +73,8 @@ export default function Register() {
                             <Label>E-mail:</Label>
                             <Input
                                 name='input_email'
-                                id="input_email"
-                                placeholder="Digite seu e-mail"
+                                id='input_email'
+                                placeholder='Digite seu e-mail'
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -82,10 +82,10 @@ export default function Register() {
                         <span>
                             <Label>Senha:</Label>
                             <Input
-                                type="password"
+                                type='password'
                                 name='input_password'
-                                id="input_password"
-                                placeholder="Digite sua senha"
+                                id='input_password'
+                                placeholder='Digite sua senha'
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -93,16 +93,16 @@ export default function Register() {
                         <span>
                             <Label>Confirmar Senha:</Label>
                             <Input
-                                type="password"
+                                type='password'
                                 name='input_confirm_password'
-                                id="input_confirm_password"
-                                placeholder="Confirme sua senha"
+                                id='input_confirm_password'
+                                placeholder='Confirme sua senha'
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                         </span>
-                        <div className="actions">
-                            <Button type='submit' variant="default" size={'submit'}>Cadastrar</Button>
+                        <div className='actions'>
+                            <Button type='submit' variant='default' size={'submit'}>Cadastrar</Button>
                         </div>
                     </div>
                 </section>

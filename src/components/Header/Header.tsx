@@ -41,11 +41,11 @@ export default function Header() {
 
                 </div>
 
-                <div className='hidden md:flex'>
-                    {localStorage.getItem('token') && (
+                {localStorage.getItem('token') && (
+                    <div className='hidden md:flex'>
                         <Button variant='destructive' onClick={logout}>Logout</Button>
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <div className='md:hidden'>
                     <span onClick={() => setShowMobileMenu(!showMobileMenu)} className='btn-wrapper'>
