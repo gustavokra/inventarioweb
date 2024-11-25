@@ -45,9 +45,12 @@ export default function ClientCadaster() {
         };
 
         client ? updateClient(clientData) : registerClient(clientData)
+    };
+
+    const handleExecuteSucessSubmit = () => {
         setClient(null);
         navigate('/clients');
-    };
+    }
 
     const registerClient = async (clientDataToRegister: IClient) => {
         try {
@@ -66,9 +69,12 @@ export default function ClientCadaster() {
                 throw new Error(`Erro: ${response.status}`);
             }
 
+            handleExecuteSucessSubmit()
+
         } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error);
+            console.error('Erro ao cadastrar cliente:', error);
         }
+
     }
 
     const updateClient = async (clientDataToUpdate: IClient) => {
@@ -89,9 +95,12 @@ export default function ClientCadaster() {
                 throw new Error('Erro atualizar cliente');
             }
 
+            handleExecuteSucessSubmit()
+
         } catch (err: unknown) {
             console.log(err);
         }
+
     };
 
     const deleteClient = async () => {
@@ -110,12 +119,14 @@ export default function ClientCadaster() {
             if (!response.ok) {
                 throw new Error('Erro ao deletar cliente');
             }
-
+            setClient(null)
             navigate('/clients');
 
         } catch (err: unknown) {
             console.log(err);
         }
+
+        handleExecuteSucessSubmit
     };
 
     return (

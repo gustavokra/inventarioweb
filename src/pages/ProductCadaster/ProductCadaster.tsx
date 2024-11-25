@@ -1,20 +1,12 @@
-import { IProduct } from '@/@types/IProduct';
-import { ISupplier } from '@/@types/ISupplier';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select';
-import { Label } from '@radix-ui/react-label';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useProduct } from '@/context/ProductContext';
-
+import { IProduct } from "@/@types/IProduct";
+import { ISupplier } from "@/@types/ISupplier";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useProduct } from "@/context/ProductContext";
+import { Label } from "@radix-ui/react-label";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCadaster() {
     const [id, setId] = useState(0);
@@ -43,7 +35,7 @@ export default function ProductCadaster() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar os dados');
+                    throw new Error("Erro ao buscar os dados");
                 }
                 setSuppliers(await response.json());
             } catch (err: unknown) {
@@ -64,13 +56,12 @@ export default function ProductCadaster() {
             setActive(product.active)
         }
 
-        console.log(product?.supplier?.name)
 
     }, [product]);
 
     const returnToList = () => {
         setProduct(null)
-        navigate('/products')
+        navigate("/products")
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +106,7 @@ export default function ProductCadaster() {
             navigate('/products');
 
         } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error);
+            console.error('Erro ao cadastrar produto:', error);
         }
     }
 
@@ -134,7 +125,7 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro atualizar produto');
+                throw new Error("Erro atualizar produto");
             }
 
         } catch (err: unknown) {
@@ -159,50 +150,51 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro excluir produto');
+                throw new Error("Erro excluir produto");
             }
 
         } catch (err: unknown) {
             console.log(err);
         }
 
+        setProduct(null)
         navigate('/products');
     };
 
 
     return (
-        <section id='produc_cadaster' className='h-screen container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10'>
+        <section id="produc_cadaster" className="h-screen container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
             <header>
                 <h3>Cadastro de Produto</h3>
                 {product &&
-                    <div className='flex justify-end'>
+                    <div className="flex justify-end">
                         <Button variant='destructive'
-                        onClick={deleteProduct}>
+                            onClick={deleteProduct}>
                             Excluir
                         </Button>
                     </div>
                 }
             </header>
             <form onSubmit={handleSubmit}>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor='name'>Imagem:</Label>
-                        <Input id='image' type='file' className='w-full'
-                            value={''}
+                        <Label htmlFor="name">Imagem:</Label>
+                        <Input id="image" type="file" className="w-full"
+                            value={""}
                             onChange={handleImageChange} />
-                        {image && <img src={image} alt='Imagem do produto' width={200} height={200} />}
+                        {image && <img src={image} alt="Imagem do produto" width={200} height={200} />}
                     </div>
                     <div>
-                        <Label htmlFor='supplier'>Fornecedor:</Label>
-                        <Select value={supplier?.name || ''}
+                        <Label htmlFor="supplier">Fornecedor:</Label>
+                        <Select value={supplier?.name || ""}
                             onValueChange={(value) => {
                                 const selectedSupplier = suppliers?.find((suppl) => suppl.name === value);
                                 if (selectedSupplier) {
                                     setSupplier(selectedSupplier);
                                 }
                             }}>
-                            <SelectTrigger className='w-full'>
-                                <SelectValue placeholder='Selecione um fornecedor' />
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecione um fornecedor" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
@@ -218,37 +210,39 @@ export default function ProductCadaster() {
                         </Select>
                     </div>
                     <div>
-                        <Label htmlFor='name'>Nome:</Label>
-                        <Input id='name' type='text' className='w-full' placeholder='Digite o nome'
+                        <Label htmlFor="name">Nome:</Label>
+                        <Input id="name" type="text" className="w-full" placeholder="Digite o nome"
                             value={name}
                             onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div>
-                        <Label htmlFor='description'>Descrição:</Label>
-                        <Input id='description' type='text' className='w-full' placeholder='Digite a descrição'
+                        <Label htmlFor="description">Descrição:</Label>
+                        <Input id="description" type="text" className="w-full" placeholder="Digite a descrição"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)} />
                     </div>
-                    <div className='md:col-span-2'>
-                        <Label htmlFor='price'>Preço (R$):</Label>
-                        <Input id='price' type='number' className='w-full' placeholder='Digite o preço'
-                            value={price} step={.01}
-                            onChange={(e) => setPrice((e.target.value as any))} />
+                    <div className="md:col-span-2">
+                        <Label htmlFor="price">Preço (R$):</Label>
+                        <Input id="price" maxLength={10} className="w-full" 
+                            placeholder="Digite o preço"
+                            value={price.toFixed(2).replace('.',',')}
+                            onChange={(e) => setPrice(e.target.value ? parseFloat(e.target.value) : 1.0)} />
                     </div>
-                    <div className='md:col-span-2'>
-                        <Label htmlFor='quantity'>Quantidade:</Label>
-                        <Input id='quantity' type='number' className='w-full' placeholder='Digite a quantidade'
+                    <div className="md:col-span-2">
+                        <Label htmlFor="quantity">Quantidade:</Label>
+                        <Input id="quantity" type="number" maxLength={10} className="w-full" 
+                            placeholder="Digite a quantidade"
                             value={quantity}
-                            onChange={(e) => setQuantity(e.target.value as any)}
+                            onChange={(e) => setQuantity(e.target.value ? parseInt(e.target.value) : 1)}
                         />
                     </div>
                 </div>
 
-                <div className='flex flex-col md:flex-row gap-4 mt-4'>
-                    <Button className='md:w-1/4 order-2 md:order-1' variant='destructive'
+                <div className="flex flex-col md:flex-row gap-4 mt-4">
+                    <Button className="md:w-1/4 order-2 md:order-1" variant="destructive"
                         onClick={() => returnToList()}>
                         Voltar para lista</Button>
-                    <Button className='md:w-3/4 order-1 md:order-2' variant='default'>{product ? 'Atualizar' : 'Cadastrar'}</Button>
+                    <Button className="md:w-3/4 order-1 md:order-2" variant="default">{product ? 'Atualizar' : 'Cadastrar'}</Button>
                 </div>
             </form>
         </section>

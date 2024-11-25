@@ -12,7 +12,7 @@ export default function ProductList() {
     const { setProduct } = useProduct();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
-    const [supplierNameFilter, setsupplierNameFilter] = useState<string>('');
+    const [supplierFilter, setsupplierNameFilter] = useState<string>('');
     const [sortPriceOrder, setSortPriceOrder] = useState<'asc' | 'desc'>('asc');
     const [reload, setReload] = useState(false);
 
@@ -81,9 +81,10 @@ export default function ProductList() {
 
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
-            product.supplier ?
-            product.supplier.name.includes(supplierNameFilter)
-            : false
+
+        (product.supplier &&
+            product.supplier.name.toLowerCase().includes(supplierFilter.toLowerCase()) ||
+            product.supplier?.document.toLowerCase().includes(supplierFilter.toLowerCase()))
     );
 
     const sortProducts = (order: 'asc' | 'desc') => {
@@ -115,7 +116,7 @@ export default function ProductList() {
                 <Input
                     type='text'
                     placeholder='Filtrar por fornecedor'
-                    value={supplierNameFilter}
+                    value={supplierFilter}
                     onChange={(e) => setsupplierNameFilter(e.target.value)}
                 />
                 <Button onClick={() => setSortPriceOrder(sortPriceOrder === 'asc' ? 'desc' : 'asc')}>
@@ -143,9 +144,9 @@ export default function ProductList() {
                             <TableCell className='text-center'><img src={product.image} /></TableCell>
                             <TableCell className='text-left'>{product.name}</TableCell>
                             <TableCell className='text-left'>{product.description}</TableCell>
-                            <TableCell className='text-right'>{product.price.toString().replace('.', ',')}</TableCell>
+                            <TableCell className='text-right'>{product.price.toFixed(2).replace('.', ',')}</TableCell>
                             <TableCell className='text-right'>{product.quantity}</TableCell>
-                            <TableCell className='text-left'>{product.supplier ? product.supplier.name : ''}</TableCell>
+                            <TableCell className='text-left'>{product.supplier && product.supplier.name + ' - ' + product.supplier.document}</TableCell>
                             <TableCell className='text-center'>
                                 <StatusLabel
                                     isPrimary={product.active}

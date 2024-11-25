@@ -67,7 +67,7 @@ export default function SupplierCadaster() {
             }
 
         } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error);
+            console.error('Erro ao cadastrar fornecedor:', error);
         }
     }
 
@@ -110,7 +110,7 @@ export default function SupplierCadaster() {
             if (!response.ok) {
                 throw new Error('Erro ao deletar fornecedor');
             }
-
+            setSupplier(null)
             navigate('/suppliers');
 
         } catch (err: unknown) {

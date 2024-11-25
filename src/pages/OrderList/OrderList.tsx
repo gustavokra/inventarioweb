@@ -7,6 +7,7 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
+import React from 'react';
 
 export default function ClientList() {
     const [orders, setOrders] = useState<IOrder[]>([]);
@@ -15,6 +16,7 @@ export default function ClientList() {
     const [productFilter, setProductFilter] = useState<string>('');
     const [enumStatusFilter, setStatusFilter] = useState<string>('');
     const [reload, setReload] = useState(false);
+    const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
     const { setOrder } = useOrder();
     const navigate = useNavigate();
 
@@ -34,7 +36,6 @@ export default function ClientList() {
                     throw new Error('Erro ao buscar os dados');
                 }
                 setOrders(await response.json());
-                console.log(orders)
             } catch (err: unknown) {
                 console.log(err);
             }
@@ -55,7 +56,7 @@ export default function ClientList() {
     const handleCompleteOrder = async (order: IOrder) => {
 
         const orderDataToUpdate = {
-            enumStatus: EnumOrderStatus.COMPLETED
+            enumStatus: "COMPLETED"
         }
 
         try {
@@ -80,6 +81,10 @@ export default function ClientList() {
         }
     };
 
+    const toggleOrderItems = (orderId: number) => {
+        setExpandedOrderId(prevId => (prevId === orderId ? null : orderId));
+    };
+
     const filteredOrders = orders.filter(order => {
         let hasMatchingProduct = order.items?.some(item =>
             item.product.name.toLowerCase().includes(productFilter.toLowerCase())
@@ -88,10 +93,12 @@ export default function ClientList() {
         let orderStatus = order.enumStatus.toString() === "PENDING" ? "pendente" : "concluído";
 
         return order.createdAt?.includes(createdAtFilter) &&
-            order.client.name.toLowerCase().includes(clientFilter.toLowerCase()) &&
+
+            order.client.name.toLowerCase().includes(clientFilter.toLowerCase()) ||
+            order.client.document.toLowerCase().includes(clientFilter.toLowerCase()) &&
 
             orderStatus.includes(enumStatusFilter.toLowerCase()) &&
-            
+
             hasMatchingProduct
     });
 
@@ -135,35 +142,73 @@ export default function ClientList() {
                     <TableRow>
                         <TableHead className='w-2/12 text-left'>Criação</TableHead>
                         <TableHead className='w-4/12 text-left'>Cliente</TableHead>
-                        <TableHead className='w-3/12 text-right'>Total (R$)</TableHead>
+                        <TableHead className='w-3/12 text-right'>Total Pedido (R$)</TableHead>
                         <TableHead className='w-2/12 text-center'>Situação</TableHead>
                         <TableHead className='w-1/12 text-center'>Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {filteredOrders.map((order) => (
-                        <TableRow key={order.id}>
-                            <TableCell className='text-left'>{order.createdAt}</TableCell>
-                            <TableCell className='text-left'>{order.client.name}</TableCell>
-                            <TableCell className='text-right'>{order.totalValue.toString().replace('.', ',')}</TableCell>
-                            <TableCell className="text-center">
-                                <StatusLabel
-                                    isPrimary = {order.enumStatus.toString() === "COMPLETED"}
-                                    primaryText='Concluído'
-                                    secondText='Pendente'
-                                />
-                            </TableCell>
-                            <TableCell className='flex justify-end gap-3'>
-                                {
-                                    order.enumStatus.toString() === "COMPLETED" &&
-                                    <Button variant='destructive' className='w-5/12'
-                                        onClick={() => handleCompleteOrder(order)}>
-                                        Finalizar
+                        <React.Fragment key={order.id}>
+                            <TableRow  onClick={() => toggleOrderItems(order.id ? order.id : 0)} style={{ cursor: 'pointer' }}>
+                                <TableCell className="text-left">{order.createdAt}</TableCell>
+                                <TableCell className="text-left">{order.client.name} - {order.client.document}</TableCell>
+                                <TableCell className="text-right">{order.totalValue?.toFixed(2).replace('.', ',')}</TableCell>
+                                <TableCell className="text-center">
+                                    <StatusLabel
+                                        isPrimary={order.enumStatus.toString() === "COMPLETED"}
+                                        primaryText="Concluído"
+                                        secondText="Pendente"
+                                    />
+                                </TableCell>
+                                <TableCell className="flex justify-end gap-3">
+                                    {order.enumStatus.toString() === "PENDING" && (
+                                        <Button
+                                            variant="destructive"
+                                            className="w-5/12"
+                                            onClick={() => handleCompleteOrder(order)}
+                                        >
+                                            Finalizar
+                                        </Button>
+                                    )}
+                                    <Button variant="default" className="w-5/12" onClick={() => handleEdit(order)}>
+                                        Editar
                                     </Button>
-                                }
-                                <Button variant='default' className='w-5/12' onClick={() => handleEdit(order)}>Editar</Button>
-                            </TableCell>
-                        </TableRow>
+                                </TableCell>
+                            </TableRow>
+
+                            {expandedOrderId === order.id && (
+                                <TableRow key={order.id + "items"}>
+                                    <TableCell colSpan={5} className="p-4">
+                                        <div className="bg-gray-100 p-3 rounded">
+                                            <h4 className="font-semibold mb-2">Itens do Pedido:</h4>
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead className="w-4/12 text-left">Nome</TableHead>
+                                                        <TableHead className="w-2/12 text-right">Quantidade</TableHead>
+                                                        <TableHead className="w-3/12 text-right">Preço Unitário (R$)</TableHead>
+                                                        <TableHead className="w-3/12 text-right">Total Item (R$)</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {order.items.map((item) => (
+                                                        <TableRow key={item.id}>
+                                                            <TableCell className="text-left">{item.product.name}</TableCell>
+                                                            <TableCell className="text-right">{item.quantity}</TableCell>
+                                                            <TableCell className="text-right">{item.unitPrice.toFixed(2).replace('.', ',')}</TableCell>
+                                                            <TableCell className="text-right">
+                                                                {(item.quantity * item.unitPrice).toFixed(2).replace('.', ',')}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </React.Fragment>
                     ))}
                 </TableBody>
                 <TableFooter>

@@ -6,6 +6,7 @@ import { SupplierProvider } from '@/context/SupplierContext'
 import ClientCadaster from '@/pages/ClientCadaster/ClientCadaster'
 import ClientList from '@/pages/ClientList/ClientList'
 import Login from '@/pages/Login/Login'
+import OrderCadaster from '@/pages/OrderCadaster/OrderCadaster'
 import OrderList from '@/pages/OrderList/OrderList'
 import ProductCadaster from '@/pages/ProductCadaster/ProductCadaster'
 import ProductList from '@/pages/ProductList/ProductList'
@@ -37,7 +38,7 @@ const Navigator = () => {
                 <Route path='/products/cadaster' element={isAuthenticated ? <ProductProvider> <ProductCadaster /> </ProductProvider> : <Login />} />
 
                 <Route path='/orders' element={isAuthenticated ? <OrderProvider> <OrderList /> </OrderProvider>: <Login />} />
-                <Route path='/orders/cadaster' element={isAuthenticated ? <OrderProvider> <OrderList /> </OrderProvider> : <Login />} />
+                <Route path='/orders/cadaster' element={isAuthenticated ? <OrderProvider> <OrderCadaster /> </OrderProvider> : <Login />} />
             </Routes>
         </Router>
     );
