@@ -2,11 +2,13 @@ import { IClient } from '@/@types/IClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useClient } from '@/context/ClientContext';
+import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useClient } from '@/context/ClientContext';
 
 export default function ClientCadaster() {
+    const { toast } = useToast();
     const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [document, setDocument] = useState('');
@@ -36,24 +38,16 @@ export default function ClientCadaster() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        const clientData: IClient = {
-            name,
-            document,
-            contact,
-            address,
-            active,
-        };
-
-        client ? updateClient(clientData) : registerClient(clientData)
+        const clientData: IClient = { name, document, contact, address, active };
+        client ? updateClient(clientData) : registerClient(clientData, toast);
     };
 
     const handleExecuteSucessSubmit = () => {
         setClient(null);
         navigate('/clients');
-    }
+    };
 
-    const registerClient = async (clientDataToRegister: IClient) => {
+    const registerClient = async (clientDataToRegister: IClient, toast: any) => {
         try {
             const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
                 method: 'POST',
@@ -66,17 +60,24 @@ export default function ClientCadaster() {
             });
 
             if (!response.ok) {
-                console.log(response.status)
-                throw new Error(`Erro: ${response.status}`);
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao cadastrar cliente",
+                    description: errorData.details,
+                });
+
+                console.log(errorData.details)
+                return;
             }
 
-            handleExecuteSucessSubmit()
+            toast({ variant: "default", title: "Sucesso!", description: "Cliente cadastrado com sucesso." });
+            handleExecuteSucessSubmit();
 
         } catch (error) {
-            console.error('Erro ao cadastrar cliente:', error);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar." });
         }
-
-    }
+    };
 
     const updateClient = async (clientDataToUpdate: IClient) => {
 
@@ -146,7 +147,9 @@ export default function ClientCadaster() {
                 }
 
             </header>
+
             <form onSubmit={handleSubmit}>
+
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     <div>
                         <Label htmlFor='name'>Nome:</Label>

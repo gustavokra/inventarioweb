@@ -1,3 +1,5 @@
+import { IGrupo } from "./IGrupo";
+import { IMarca } from "./IMarca";
 import { ISupplier } from "./ISupplier";
 
 export interface IProduct {
@@ -5,6 +7,8 @@ export interface IProduct {
     image: string;
     name: string;
     description: string;
+    marca?: IMarca;
+    grupo?: IGrupo;
     price: number;
     quantity: number;
     supplier?: ISupplier;

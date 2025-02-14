@@ -34,6 +34,7 @@ export default function ProductList() {
                 }
 
                 setProducts(await response.json());
+                console.log(products)
             } catch (err: unknown) {
                 console.log(err);
             }
@@ -80,11 +81,12 @@ export default function ProductList() {
     };
 
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+        product.name.toLowerCase().includes(nameFilter.toLowerCase()) 
 
-        (product.supplier &&
-            product.supplier.name.toLowerCase().includes(supplierFilter.toLowerCase()) ||
-            product.supplier?.document.toLowerCase().includes(supplierFilter.toLowerCase()))
+        // &&
+        // (product.supplier &&
+        //     product.supplier.name.toLowerCase().includes(supplierFilter.toLowerCase()) ||
+        //     product.supplier?.document.toLowerCase().includes(supplierFilter.toLowerCase()))
     );
 
     const sortProducts = (order: 'asc' | 'desc') => {
@@ -103,7 +105,7 @@ export default function ProductList() {
         <section id='product_list' className='container flex flex-col gap-4 w-10/12 mt-4 '>
             <div className='flex justify-between mb-4'>
                 <h3>Produtos</h3>
-                {admin ? <Button onClick={handleCadaster}>teste</Button> : <></>}
+                {admin ? <Button onClick={handleCadaster}>Cadastrar</Button> : <></>}
             </div>
 
             <div className='flex md:flex-row gap-4 w-full md:w-1/2'>
@@ -130,10 +132,12 @@ export default function ProductList() {
                     <TableRow>
                         <TableHead className='w-1/12 text-center'>Imagem</TableHead>
                         <TableHead className='w-2/12 text-left'>Nome</TableHead>
-                        <TableHead className='w-3/12 text-left'>Descrição</TableHead>
+                        <TableHead className='w-2/12 text-left'>Descrição</TableHead>
                         <TableHead className='w-1/12 text-right	'>Preço (R$)</TableHead>
                         <TableHead className='w-1/12 text-right	'>Quantidade</TableHead>
-                        <TableHead className='w-2/12 text-left'>Fornecedor</TableHead>
+                        <TableHead className='w-1/12 text-left	'>Marca</TableHead>
+                        <TableHead className='w-1/12 text-left	'>Grupo</TableHead>
+                        <TableHead className='w-1/12 text-left'>Fornecedor</TableHead>
                         <TableHead className='w-1/12 text-center'>Ativo</TableHead>
                         <TableHead className='w-1/12 text-center'>Ações</TableHead>
                     </TableRow>
@@ -146,6 +150,8 @@ export default function ProductList() {
                             <TableCell className='text-left'>{product.description}</TableCell>
                             <TableCell className='text-right'>{product.price.toFixed(2).replace('.', ',')}</TableCell>
                             <TableCell className='text-right'>{product.quantity}</TableCell>
+                            <TableCell className='text-right'>{product.marca?.nome}</TableCell>
+                            <TableCell className='text-right'>{product.grupo?.nome}</TableCell>
                             <TableCell className='text-left'>{product.supplier && product.supplier.name + ' - ' + product.supplier.document}</TableCell>
                             <TableCell className='text-center'>
                                 <StatusLabel

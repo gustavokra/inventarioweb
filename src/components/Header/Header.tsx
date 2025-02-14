@@ -17,12 +17,12 @@ export default function Header() {
     };
 
     return (
-        <header className='py-sm bg-gray-600 text-white px-10'>
-            <nav className='flex items-center justify-between'>
-                <img src={LogoIcon} alt='Logo inventário web' width={220} height={80} />
+        <header className='py-sm bg-green-600 text-white px-10'>
+            <nav className='flex items-center justify-around mx-20'>
+            <img src={LogoIcon} alt='Logo inventário Fert do Reino' width={70} height={10} />
 
                 <div className='hidden md:flex'>
-                    <ul className='flex gap-x-10'>
+                    <ul className='flex gap-x-10 items-center'>
                         {localStorage.getItem('token') ? (
                             <>
                                 <li><Link to={EnumPaginas.clients}>Clientes</Link></li>

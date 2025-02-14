@@ -1,6 +1,9 @@
+import { IGrupo } from "@/@types/IGrupo";
+import { IMarca } from "@/@types/IMarca";
 import { IProduct } from "@/@types/IProduct";
 import { ISupplier } from "@/@types/ISupplier";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useProduct } from "@/context/ProductContext";
@@ -16,35 +19,87 @@ export default function ProductCadaster() {
     const [quantity, setQuantity] = useState<number>(0);
     const [suppliers, setSuppliers] = useState<ISupplier[]>();
     const [supplier, setSupplier] = useState<ISupplier>();
+    const [marcas, setMarcas] = useState<IMarca[]>();
+    const [marca, setMarca] = useState<IMarca>();
+    const [grupos, setGrupos] = useState<IGrupo[]>();
+    const [grupo, setGrupo] = useState<IGrupo>();
     const [image, setImage] = useState('');
     const [active, setActive] = useState(true);
     const admin = localStorage.getItem('admin') === 'true';
     const { product, setProduct } = useProduct();
+    const [isOpenGrupo, setIsOpenGrupo] = useState(false);
+    const [isOpenMarca, setIsOpenMarca] = useState(false);
+    const [novoGrupo, setNovoGrupo] = useState("");
+    const [novaMarca, setNovaMarca] = useState("");
+    const [reload, setReload] = useState(false);
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchSuppliers = async () => {
-            try {
-                const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'dbImpl': 'SQLITE',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    },
-                });
+    const fetchSuppliers = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            });
 
-                if (!response.ok) {
-                    throw new Error("Erro ao buscar os dados");
-                }
-                setSuppliers(await response.json());
-            } catch (err: unknown) {
-                console.log(err);
+            if (!response.ok) {
+                throw new Error("Erro ao buscar os dados");
             }
-        };
+            setSuppliers(await response.json());
+        } catch (err: unknown) {
+            console.log(err);
+        }
+    };
+
+    const fetchMarcas = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao buscar os dados");
+            }
+            setMarcas(await response.json());
+        } catch (err: unknown) {
+            console.log(err);
+        }
+    };
+
+    const fetchGrupos = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao buscar os dados");
+            }
+            setGrupos(await response.json());
+        } catch (err: unknown) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
 
         fetchSuppliers();
+        fetchMarcas();
+        fetchGrupos()
 
         if (product) {
             setId(product.id ? product.id : 0)
@@ -66,8 +121,14 @@ export default function ProductCadaster() {
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return;
-        setImage(URL.createObjectURL(e.target.files[0]));
+        if (!e.target.files || e.target.files.length === 0) return;
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            setImage(reader.result as string);
+        };
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -77,6 +138,8 @@ export default function ProductCadaster() {
             image,
             name,
             description,
+            marca,
+            grupo,
             price,
             quantity,
             supplier,
@@ -163,6 +226,74 @@ export default function ProductCadaster() {
     };
 
 
+
+    const handleCadastroGrupo = () => {
+        criarGrupo()
+        setIsOpenGrupo(false);
+        setNovoGrupo("");
+    };
+
+    const criarGrupo = async () => {
+        try {
+            const novoGrupoCriar: IMarca = {
+                nome: novoGrupo
+            }
+
+            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+                body: JSON.stringify(novoGrupoCriar),
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao criar grupo");
+            }
+
+            fetchGrupos()
+        } catch (err: unknown) {
+            console.log(err);
+        }
+    }
+
+
+    const handleCadastroMarca = () => {
+        criarMarca()
+        setIsOpenMarca(false);
+        setNovaMarca("");
+    };
+
+    const criarMarca = async () => {
+        try {
+            const novaMarcaCriar: IMarca = {
+                nome: novaMarca
+            }
+
+            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                },
+                body: JSON.stringify(novaMarcaCriar),
+            });
+
+            console.log(response)
+
+            if (!response.ok) {
+                throw new Error("Erro ao criar marca");
+            }
+
+            fetchMarcas()
+        } catch (err: unknown) {
+            console.log(err);
+        }
+    }
+
     return (
         <section id="produc_cadaster" className="h-screen container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
             <header>
@@ -211,6 +342,107 @@ export default function ProductCadaster() {
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
+                    </div>
+                    <div>
+                        <Label htmlFor="marca">Marca:</Label>
+                        <Select value={marca?.nome || ""}
+                            onValueChange={(value) => {
+                                if (value === "cadastrar") {
+                                    setIsOpenMarca(true);
+                                } else {
+                                    const marcaSelecionada = marcas?.find((marc) => marc.nome === value);
+                                    if (marcaSelecionada) {
+                                        setMarca(marcaSelecionada);
+                                    }
+                                }
+                            }}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecione uma marca" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="cadastrar" className="text-blue-600">
+                                        + Cadastrar Marca
+                                    </SelectItem>
+                                    {marcas && marcas.map((marca) => (
+                                        <SelectItem key={marca.id}
+                                            onClick={() => {
+                                                setMarca(marca)
+                                            }}
+                                            value={marca.nome}>{marca.nome}</SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                            <Dialog open={isOpenMarca} onOpenChange={setIsOpenMarca}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Cadastrar Nova Marca</DialogTitle>
+                                    </DialogHeader>
+                                    <input
+                                        type="text"
+                                        value={novaMarca}
+                                        onChange={(e) => setNovaMarca(e.target.value)}
+                                        className="w-full border p-2 rounded-md"
+                                        placeholder="Nome da marca"
+                                    />
+                                    <DialogFooter>
+                                        <Button onClick={() => setIsOpenMarca(false)} variant="outline">Cancelar</Button>
+                                        <Button onClick={handleCadastroMarca}>Cadastrar</Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label htmlFor="grupo">Grupo:</Label>
+                        <Select value={grupo?.nome || ""}
+                            onValueChange={(value) => {
+                                if (value === "cadastrar") {
+                                    setIsOpenGrupo(true);
+                                } else {
+                                    const grupoSelecionado = grupos?.find((grp) => grp.nome === value);
+                                    if (grupoSelecionado) {
+                                        setGrupo(grupoSelecionado);
+                                    }
+                                }
+                            }}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecione um grupo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="cadastrar" className="text-blue-600">
+                                        + Cadastrar Grupo
+                                    </SelectItem>
+                                    {grupos && grupos.map((grp) => (
+                                        <SelectItem key={grp.id}
+                                            onClick={() => {
+                                                setGrupo(grp)
+                                            }}
+                                            value={grp.nome}>{grp.nome}</SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        <Dialog open={isOpenGrupo} onOpenChange={setIsOpenGrupo}>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Cadastrar Novo Grupo</DialogTitle>
+                                </DialogHeader>
+                                <input
+                                    type="text"
+                                    value={novoGrupo}
+                                    onChange={(e) => setNovoGrupo(e.target.value)}
+                                    className="w-full border p-2 rounded-md"
+                                    placeholder="Nome do grupo"
+                                />
+                                <DialogFooter>
+                                    <Button onClick={() => setIsOpenGrupo(false)} variant="outline">Cancelar</Button>
+                                    <Button onClick={handleCadastroGrupo}>Cadastrar</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                     <div>
                         <Label htmlFor="name">Nome:</Label>
