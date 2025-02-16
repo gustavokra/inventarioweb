@@ -70,6 +70,7 @@ export default function ProductCadaster() {
                 throw new Error("Erro ao buscar os dados");
             }
             setMarcas(await response.json());
+            console.log(marca?.id)
         } catch (err: unknown) {
             console.log(err);
         }
@@ -122,12 +123,13 @@ export default function ProductCadaster() {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
+    
         const file = e.target.files[0];
         const reader = new FileReader();
         
         reader.readAsDataURL(file);
         reader.onload = () => {
-            setImage(reader.result as string);
+            setImage(reader.result as string); // Base64 da imagem
         };
     };
 
@@ -167,11 +169,11 @@ export default function ProductCadaster() {
                 throw new Error(`Erro: ${response.status}`);
             }
 
-            navigate('/products');
-
         } catch (error) {
             console.error('Erro ao cadastrar produto:', error);
         }
+
+        navigate('/products');
     }
 
     const updateProduct = async (prodcutDataToUpdate: IProduct) => {

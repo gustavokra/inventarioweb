@@ -34,13 +34,13 @@ export default function ProductList() {
                 }
 
                 setProducts(await response.json());
-                console.log(products)
             } catch (err: unknown) {
                 console.log(err);
             }
         };
 
         fetchData();
+        console.log(products)
     }, [reload]);
 
     const handleCadaster = () => {

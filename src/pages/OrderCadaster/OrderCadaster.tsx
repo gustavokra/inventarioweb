@@ -100,9 +100,9 @@ export default function OrderCadaster() {
     const handleChangeItemQuantity = (item: IOrderItem, e: React.ChangeEvent<HTMLInputElement>) => {
         const newQuantity = e.target.value ? parseInt(e.target.value) : 1;
         setItems((prev) =>
-            prev.map((prevItem) =>
-                prevItem.id === item.id ? { ...prevItem, quantity: newQuantity } : prevItem
-            )
+            prev.map((prevItem) => {
+                return prevItem.product.id === item.product.id ? { ...prevItem, quantity: newQuantity } : prevItem;
+            })
         );
     }
 
@@ -301,7 +301,7 @@ export default function OrderCadaster() {
                                     </TableCell>
                                     <TableCell className='text-right'>{item.unitPrice.toFixed(2).replace('.', ',')}</TableCell>
                                     <TableCell className='text-right'>{(item.quantity * item.unitPrice).toFixed(2).replace('.', ',')}</TableCell>
-                                    <TableCell className='flex justify-center gap-3 justify-center'>
+                                    <TableCell className='text-center flex items-center justify-center gap-3 '>
                                         <Button variant='destructive' className='w-10/12' onClick={() => handleRemoveItem(item)}>Remover</Button>
                                     </TableCell>
                                 </TableRow>
