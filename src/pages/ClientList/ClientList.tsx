@@ -6,9 +6,11 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClient } from '../../context/ClientContext';
+import { useToast } from '@/hooks/use-toast';
 
 
 export default function ClientList() {
+  const { toast } = useToast();
   const [clients, setClients] = useState<IClient[]>([]);
   const [nameFilter, setNameFilter] = useState<string>('');
   const [documentFilter, setdocumentFilter] = useState<string>('');
@@ -69,12 +71,23 @@ export default function ClientList() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao buscar os dados');
+        const errorData = await response.json();
+        toast({
+          variant: "destructive",
+          title: "Erro ao atualizar status",
+          description: errorData.details,
+        });
+
+        return;
       }
+
+      toast({ variant: "default", title: "Sucesso!", description: "Mudança de status realizada com sucesso." });
 
       setReload((prev) => !prev);
     } catch (err: unknown) {
-      console.log(err);
+      toast({
+        variant: "destructive", title: "Erro inesperado", description: "Erro ao mudar status. Tente novamente ou contate o suporte."
+      });
     }
   };
 
@@ -117,28 +130,28 @@ export default function ClientList() {
           </TableRow>
         </TableHeader>
 
-          <TableBody>
+        <TableBody>
 
-            {filteredClients.map((client) => (
-              <TableRow key={client.document}>
-                <TableCell className='text-left'>{client.name}</TableCell>
-                <TableCell className='text-left'>{client.document}</TableCell>
-                <TableCell className='text-left'>{client.contact}</TableCell>
-                <TableCell className='text-left'>{client.address}</TableCell>
-                <TableCell className='text-center'>
-                  <StatusLabel
-                    isPrimary={client.active}
-                    primaryText='Sim'
-                    secondText='Não'
-                  />
-                </TableCell>
-                <TableCell className='flex justify-center gap-3'>
-                  <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(client)}> {client.active ? 'Desativar' : 'Ativar'}</Button>
-                  <Button variant='default' className='w-5/12' onClick={() => handleEdit(client)}>Editar</Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {filteredClients.map((client) => (
+            <TableRow key={client.document}>
+              <TableCell className='text-left'>{client.name}</TableCell>
+              <TableCell className='text-left'>{client.document}</TableCell>
+              <TableCell className='text-left'>{client.contact}</TableCell>
+              <TableCell className='text-left'>{client.address}</TableCell>
+              <TableCell className='text-center'>
+                <StatusLabel
+                  isPrimary={client.active}
+                  primaryText='Sim'
+                  secondText='Não'
+                />
+              </TableCell>
+              <TableCell className='flex justify-center gap-3'>
+                <Button variant='destructive' className='w-5/12' onClick={() => handleChangeStatus(client)}> {client.active ? 'Desativar' : 'Ativar'}</Button>
+                <Button variant='default' className='w-5/12' onClick={() => handleEdit(client)}>Editar</Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
 
         <TableFooter>
           <TableRow>

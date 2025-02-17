@@ -67,15 +67,14 @@ export default function ClientCadaster() {
                     description: errorData.details,
                 });
 
-                console.log(errorData.details)
                 return;
             }
 
-            toast({ variant: "default", title: "Sucesso!", description: "Cliente cadastrado com sucesso." });
+            toast({ variant: "default", title: "Sucesso!", description: "Cadastro realizado com sucesso." });
             handleExecuteSucessSubmit();
 
         } catch (error) {
-            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar." });
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -94,13 +93,18 @@ export default function ClientCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro atualizar cliente');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar",
+                    description: errorData.details,
+                });
+                return;
             }
 
-            handleExecuteSucessSubmit()
-
+            toast({ variant: "default", title: "Sucesso!", description: "Atualização realizada com sucesso." });
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte." });
         }
 
     };
@@ -119,16 +123,23 @@ export default function ClientCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao deletar cliente');
-            }
-            setClient(null)
-            navigate('/clients');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar deletar",
+                    description: errorData.details,
+                });
+
+                return;
+            } 
+            handleExecuteSucessSubmit();
+            toast({ variant: "default", title: "Sucesso!", description: "Remoção realizada com sucesso." });
 
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." }); 
         }
 
-        handleExecuteSucessSubmit
+        handleExecuteSucessSubmit()
     };
 
     return (
@@ -161,7 +172,9 @@ export default function ClientCadaster() {
                         <Label htmlFor='cpf_cnpj'>CPF/CNPJ:</Label>
                         <Input id='cpf_cnpj' type='text' className='w-full' placeholder='Digite seu cpf ou cnpj'
                             value={document}
-                            onChange={(e) => setDocument(e.target.value)} />
+                            onChange={(e) => {
+                                setDocument(e.target.value)
+                            }} />
                     </div>
                     <div className='md:col-span-2'>
                         <Label htmlFor='contato'>Contato:</Label>

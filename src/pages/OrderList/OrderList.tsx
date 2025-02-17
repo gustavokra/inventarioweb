@@ -170,13 +170,13 @@ export default function ClientList() {
                                     {order.enumStatus.toString() === "PENDING" && (
                                         <Button
                                             variant="destructive"
-                                            className="w-5/12"
+                                            className="w-10/12"
                                             onClick={() => handleCompleteOrder(order)}
                                         >
                                             Finalizar
                                         </Button>
                                     )}
-                                    <Button variant="default" className="w-5/12" onClick={() => handleEdit(order)}>
+                                    <Button variant="default" className="w-12/12" onClick={() => handleEdit(order)}>
                                         Editar
                                     </Button>
                                 </TableCell>

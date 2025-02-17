@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSupplier } from '@/context/SupplierContext';
+import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SupplierCadaster() {
+    const { toast } = useToast();
     const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [document, setDocument] = useState('');
@@ -45,9 +47,13 @@ export default function SupplierCadaster() {
         };
 
         supplier ? updateSupplier(supplierData) : registerSupplier(supplierData)
+    };
+
+    const handleExecuteSucessSubmit = () => {
         setSupplier(null);
         navigate('/suppliers');
     };
+
 
     const registerSupplier = async (supplierDataToRegister: ISupplier) => {
         try {
@@ -62,12 +68,20 @@ export default function SupplierCadaster() {
             });
 
             if (!response.ok) {
-                console.log(response.status)
-                throw new Error(`Erro: ${response.status}`);
-            }
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao cadastrar",
+                    description: errorData.details,
+                });
 
+                return;
+            }
+            handleExecuteSucessSubmit();
+
+            toast({ variant: "default", title: "Sucesso!", description: "Cadastro realizado com sucesso." });
         } catch (error) {
-            console.error('Erro ao cadastrar fornecedor:', error);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar. Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." });
         }
     }
 
@@ -86,11 +100,19 @@ export default function SupplierCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro atualizar fornecedor');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar",
+                    description: errorData.details,
+                });
+
+                return;
             }
+            toast({ variant: "default", title: "Sucesso!", description: "Atualização realizada com sucesso." });
 
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -108,13 +130,22 @@ export default function SupplierCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao deletar fornecedor');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao deletar",
+                    description: errorData.details,
+                });
+
+                return;            
             }
-            setSupplier(null)
-            navigate('/suppliers');
+
+            toast({ variant: "default", title: "Sucesso!", description: "Deletar realizado com sucesso." });
+
+            handleExecuteSucessSubmit();
 
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." }); 
         }
     };
 

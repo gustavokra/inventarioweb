@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, TableFooter } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import { ISupplier } from '@/@types/ISupplier';
-import { useSupplier } from '@/context/SupplierContext';
 import { StatusLabel } from '@/components/StatusLabel';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useSupplier } from '@/context/SupplierContext';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function SupplierList() {
+    const { toast } = useToast();
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
     const [documentFilter, setDocumentFilter] = useState<string>('');
     const [reload, setReload] = useState(false);
     const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
-    const admin = localStorage.getItem('admin') === 'true' ;
+    const admin = localStorage.getItem('admin') === 'true';
 
     const { setSupplier } = useSupplier();
     const navigate = useNavigate();
@@ -31,11 +33,18 @@ export default function SupplierList() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar os dados');
+                    const errorData = await response.json();
+                    toast({
+                        variant: "destructive",
+                        title: "Erro ao trazer dados",
+                        description: errorData.details,
+                    });
+
+                    return;
                 }
                 setSuppliers(await response.json());
             } catch (err: unknown) {
-                console.log(err);
+                toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
         };
 
@@ -71,12 +80,23 @@ export default function SupplierList() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao buscar os dados');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar status",
+                    description: errorData.details,
+                });
+
+                return;
             }
+
+            toast({ variant: "default", title: "Sucesso!", description: "Mudança de status realizada com sucesso." });
 
             setReload((prev) => !prev);
         } catch (err: unknown) {
-            console.log(err);
+            toast({
+                variant: "destructive", title: "Erro inesperado", description: "Erro ao mudar status. Tente novamente ou contate o suporte."
+            });
         }
     };
 
@@ -149,7 +169,7 @@ export default function SupplierList() {
                                 />
                             </TableCell>
                             <TableCell className='flex justify-center gap-3'>
-                                <Button variant='destructive' className={admin ? 'w-5/12' : 'w-full' } onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
+                                <Button variant='destructive' className={admin ? 'w-5/12' : 'w-full'} onClick={() => handleChangeStatus(supplier)}> {supplier.active ? 'Desativar' : 'Ativar'}</Button>
                                 {admin ? <Button variant='default' className='w-5/12' onClick={() => handleEdit(supplier)}>Editar</Button> : null}
                             </TableCell>
                         </TableRow>
