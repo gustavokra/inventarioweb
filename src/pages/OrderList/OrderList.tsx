@@ -1,16 +1,16 @@
-import { EnumOrderStatus } from '@/@types/EnumOrderStatus';
 import { IOrder } from '@/@types/IOrder';
 import { StatusLabel } from '@/components/StatusLabel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useEffect, useState } from 'react';
+import FormatDate from '@/util/FormatDate';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrder } from '../../context/OrderContext';
-import React from 'react';
-import FormatDate from '@/util/FormatDate';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ClientList() {
+    const { toast } = useToast();
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [createdAtFilter, setCreatedAtFilter] = useState<string>('');
     const [clientFilter, setClientFilter] = useState<string>('');
@@ -34,11 +34,18 @@ export default function ClientList() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar os dados');
+                    const errorData = await response.json();
+                    toast({
+                        variant: "destructive",
+                        title: "Erro ao trazer dados",
+                        description: errorData.details,
+                    });
+          
+                    return;
                 }
                 setOrders(await response.json());
             } catch (err: unknown) {
-                console.log(err);
+                toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
         };
 
@@ -73,12 +80,23 @@ export default function ClientList() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao finalizar pedido');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar status",
+                    description: errorData.details,
+                });
+
+                return;
             }
+
+            toast({ variant: "default", title: "Sucesso!", description: "Mudança de status realizada com sucesso." });
 
             setReload((prev) => !prev);
         } catch (err: unknown) {
-            console.log(err);
+            toast({
+                variant: "destructive", title: "Erro inesperado", description: "Erro ao mudar status. Tente novamente ou contate o suporte."
+            });
         }
     };
 

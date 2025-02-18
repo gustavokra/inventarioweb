@@ -1,4 +1,3 @@
-import { EnumOrderStatus } from '@/@types/EnumOrderStatus';
 import { IClient } from '@/@types/IClient';
 import { IOrder } from '@/@types/IOrder';
 import { IOrderItem } from '@/@types/IOrderItem';
@@ -10,10 +9,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useOrder } from '@/context/OrderContext';
+import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function OrderCadaster() {
+    const { toast } = useToast();
+
     const { order, setOrder } = useOrder();
     const navigate = useNavigate();
 
@@ -41,12 +43,19 @@ export default function OrderCadaster() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar clientes');
+                    const errorData = await response.json();
+                    toast({
+                        variant: "destructive",
+                        title: "Erro ao buscar clientes",
+                        description: errorData.details,
+                    });
+
+                    return
                 }
 
                 setClients(await response.json());
             } catch (err: unknown) {
-                console.log(err);
+                toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao buscar clientes. Tente novamente ou contate o suporte." });
             }
         };
 
@@ -62,12 +71,20 @@ export default function OrderCadaster() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar produtos');
+                    const errorData = await response.json();
+                    toast({
+                        variant: "destructive",
+                        title: "Erro ao buscar produtos",
+                        description: errorData.details,
+                    });
+
+                    return;
                 }
+
 
                 setProducts(await response.json());
             } catch (err: unknown) {
-                console.log(err);
+                toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao buscar produtos. Tente novamente ou contate o suporte." });
             }
         };
 
@@ -161,15 +178,22 @@ export default function OrderCadaster() {
             });
 
             if (!response.ok) {
-                const errorBody = await response.json();
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao cadastrar",
+                    description: errorData.details,
+                });
 
-                throw new Error(`Erro: ${errorBody.message}`);
+                return;
             }
+
+            toast({ variant: "default", title: "Sucesso!", description: "Cadastro realizada com sucesso." });
 
             handleExecuteSucessSubmit()
 
         } catch (error) {
-            console.error('Erro ao cadastrar pedido:', error);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar. Tente novamente ou contate o suporte." });
         }
 
     }
@@ -189,12 +213,19 @@ export default function OrderCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro atualizar fornecedor');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar",
+                    description: errorData.details,
+                });
+                return;
             }
 
-            handleExecuteSucessSubmit()
+            toast({ variant: "default", title: "Sucesso!", description: "Atualização realizada com sucesso." });
+
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -212,14 +243,22 @@ export default function OrderCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao deletar fornecedor');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar deletar",
+                    description: errorData.details,
+                });
+
+                return;
             }
 
-            setOrder(null)
-            navigate('/orders');
+            toast({ variant: "default", title: "Sucesso!", description: "Remoção realizada com sucesso." });
+            
+            handleExecuteSucessSubmit()
 
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." }); 
         }
     };
 
@@ -228,14 +267,14 @@ export default function OrderCadaster() {
             <header>
                 <h3>Cadastro de Pedido</h3>
                 {order &&
-                    admin ? 
+                    admin ?
                     <div className='flex justify-end'>
                         <Button variant='destructive'
                             onClick={deleteOrder}>
                             Excluir
                         </Button>
                     </div>
-                    : null 
+                    : null
                 }
             </header>
 

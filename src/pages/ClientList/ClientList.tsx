@@ -31,11 +31,18 @@ export default function ClientList() {
         });
 
         if (!response.ok) {
-          throw new Error('Erro ao buscar os dados');
-        }
+          const errorData = await response.json();
+          toast({
+              variant: "destructive",
+              title: "Erro ao trazer dados",
+              description: errorData.details,
+          });
+
+          return;
+      }
         setClients(await response.json());
       } catch (err: unknown) {
-        console.log(err);
+        toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
       }
     };
 

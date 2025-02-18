@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProduct } from '../../context/ProductContext';
 import { StatusLabel } from '@/components/StatusLabel';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ProductList() {
+    const { toast } = useToast();
     const navigate = useNavigate();
     const { setProduct } = useProduct();
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -15,7 +17,7 @@ export default function ProductList() {
     const [supplierFilter, setsupplierNameFilter] = useState<string>('');
     const [sortPriceOrder, setSortPriceOrder] = useState<'asc' | 'desc'>('asc');
     const [reload, setReload] = useState(false);
-    const admin = localStorage.getItem('admin') === 'true' ;
+    const admin = localStorage.getItem('admin') === 'true';
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,12 +32,19 @@ export default function ProductList() {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Erro ao buscar os dados');
+                    const errorData = await response.json();
+                    toast({
+                        variant: "destructive",
+                        title: "Erro ao trazer dados",
+                        description: errorData.details,
+                    });
+          
+                    return;
                 }
 
                 setProducts(await response.json());
             } catch (err: unknown) {
-                console.log(err);
+                toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
         };
 
@@ -71,17 +80,28 @@ export default function ProductList() {
             });
 
             if (!response.ok) {
-                throw new Error('Erro ao atualizar status');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar status",
+                    description: errorData.details,
+                });
+
+                return;
             }
+
+            toast({ variant: "default", title: "Sucesso!", description: "Mudança de status realizada com sucesso." });
 
             setReload((prev) => !prev);
         } catch (err: unknown) {
-            console.log(err);
+            toast({
+                variant: "destructive", title: "Erro inesperado", description: "Erro ao mudar status. Tente novamente ou contate o suporte."
+            });
         }
     };
 
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(nameFilter.toLowerCase()) 
+        product.name.toLowerCase().includes(nameFilter.toLowerCase())
 
         // &&
         // (product.supplier &&
@@ -162,14 +182,14 @@ export default function ProductList() {
                             </TableCell>
                             <TableCell className='flex justify-center gap-3 justify-center'>
                                 <Button variant='destructive' className={admin ? 'w-5/12' : 'w-full'} onClick={() => handleChangeStatus(product)}> {product.active ? 'Desativar' : 'Ativar'}</Button>
-                                {admin ? <Button variant='default' className='w-5/12' onClick={() => handleEdit(product)}>Editar</Button> : null }
+                                {admin ? <Button variant='default' className='w-5/12' onClick={() => handleEdit(product)}>Editar</Button> : null}
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={7}>Total</TableCell>
+                        <TableCell colSpan={9}>Total</TableCell>
                         <TableCell className='text-right'>{filteredProducts.length} produtos</TableCell>
                     </TableRow>
                 </TableFooter>

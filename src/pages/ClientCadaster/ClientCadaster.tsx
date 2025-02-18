@@ -132,14 +132,12 @@ export default function ClientCadaster() {
 
                 return;
             } 
-            handleExecuteSucessSubmit();
             toast({ variant: "default", title: "Sucesso!", description: "Remoção realizada com sucesso." });
+            handleExecuteSucessSubmit();
 
         } catch (err: unknown) {
             toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." }); 
         }
-
-        handleExecuteSucessSubmit()
     };
 
     return (

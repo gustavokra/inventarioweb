@@ -7,11 +7,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useProduct } from "@/context/ProductContext";
+import { useToast } from "@/hooks/use-toast";
 import { Label } from "@radix-ui/react-label";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductCadaster() {
+    const { toast } = useToast();
     const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -31,7 +33,6 @@ export default function ProductCadaster() {
     const [isOpenMarca, setIsOpenMarca] = useState(false);
     const [novoGrupo, setNovoGrupo] = useState("");
     const [novaMarca, setNovaMarca] = useState("");
-    const [reload, setReload] = useState(false);
 
     const navigate = useNavigate();
 
@@ -47,11 +48,17 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao buscar os dados");
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao buscar fornecedores",
+                    description: errorData.details,
+                });
             }
             setSuppliers(await response.json());
+
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao buscar fornecedores. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -67,12 +74,17 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao buscar os dados");
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao buscar marcas",
+                    description: errorData.details,
+                });
             }
+
             setMarcas(await response.json());
-            console.log(marca?.id)
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao buscar marcas. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -88,11 +100,17 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao buscar os dados");
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao buscar grupos",
+                    description: errorData.details,
+                });
             }
+
             setGrupos(await response.json());
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao buscar grupos. Tente novamente ou contate o suporte." });
         }
     };
 
@@ -116,6 +134,7 @@ export default function ProductCadaster() {
 
     }, [product]);
 
+
     const returnToList = () => {
         setProduct(null)
         navigate("/products")
@@ -123,10 +142,10 @@ export default function ProductCadaster() {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return;
-    
+
         const file = e.target.files[0];
         const reader = new FileReader();
-        
+
         reader.readAsDataURL(file);
         reader.onload = () => {
             setImage(reader.result as string); // Base64 da imagem
@@ -151,9 +170,14 @@ export default function ProductCadaster() {
         product ? updateProduct(productData) : registerProduct(productData);
     };
 
+    const handleExecuteSucessSubmit = () => {
+        setProduct(null);
+        navigate('/products');
+    };
+
     const registerProduct = async (prodcutDataToRegister: IProduct) => {
+        console.log("olá")
         try {
-            console.log({ prodcutDataToRegister })
             const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'POST',
                 headers: {
@@ -165,19 +189,26 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                console.log(response.status)
-                throw new Error(`Erro: ${response.status}`);
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao cadastrar",
+                    description: errorData.details,
+                });
+
+                return;
             }
 
-        } catch (error) {
-            console.error('Erro ao cadastrar produto:', error);
-        }
+            toast({ variant: "default", title: "Sucesso!", description: "Cadastro realizado com sucesso." });
+            handleExecuteSucessSubmit();
 
-        navigate('/products');
+        } catch (error) {
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao cadastrar. Tente novamente ou contate o suporte." });
+        }
     }
 
     const updateProduct = async (prodcutDataToUpdate: IProduct) => {
-
+        console.log({ prodcutDataToUpdate })
         try {
             const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'PUT',
@@ -191,14 +222,20 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro atualizar produto");
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar",
+                    description: errorData.details,
+                });
+                return;
             }
 
-        } catch (err: unknown) {
-            console.log(err);
-        }
+            toast({ variant: "default", title: "Sucesso!", description: "Atualização realizada com sucesso." });
 
-        navigate('/products');
+        } catch (err: unknown) {
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte." });
+        }
     };
 
 
@@ -216,18 +253,23 @@ export default function ProductCadaster() {
             });
 
             if (!response.ok) {
-                throw new Error("Erro excluir produto");
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao atualizar deletar",
+                    description: errorData.details,
+                });
+
+                return;
             }
 
+            toast({ variant: "default", title: "Sucesso!", description: "Remoção realizada com sucesso." });
+            handleExecuteSucessSubmit();
+
         } catch (err: unknown) {
-            console.log(err);
+            toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao deletar. Tente novamente ou contate o suporte." }); 
         }
-
-        setProduct(null)
-        navigate('/products');
     };
-
-
 
     const handleCadastroGrupo = () => {
         criarGrupo()
