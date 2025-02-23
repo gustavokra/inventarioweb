@@ -24,14 +24,14 @@ interface ProductComboboxProps {
     products: IProduct[];
     selectedProducts: IProduct[];
     setSelectedProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
-    handleSelectProduct?: (selectedProduct: IProduct) => void; // Função opcional
+    handleSelectProduct?: (selectedProduct: IProduct) => void;
 }
 
 export function ProductCombobox({
     products,
     selectedProducts,
     setSelectedProducts,
-    handleSelectProduct, // Função opcional
+    handleSelectProduct,
 }: ProductComboboxProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState<string>("")
@@ -39,7 +39,6 @@ export function ProductCombobox({
     const handleSelect = (selectedValue: string) => {
         const selectedProduct = products.find((product) => product.name === selectedValue)
         if (selectedProduct) {
-
             if (!selectedProducts.some((p) => p.id === selectedProduct.id)) {
                 setSelectedProducts((prev) => [...prev, selectedProduct])
                 
@@ -60,39 +59,58 @@ export function ProductCombobox({
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full justify-between"
+                    className="w-full justify-between bg-background text-foreground"
                 >
-                    {value || "Selecione um produto..."}
+                    <span className="text-muted-foreground">
+                        {value || "Selecione um produto..."}
+                    </span>
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
+            <PopoverContent className="w-full p-0" align="start">
                 <Command>
                     <CommandInput
                         value={value}
-                        onValueChange={setValue} // Atualiza o valor da pesquisa
+                        onValueChange={setValue}
                         placeholder="Pesquise um produto..."
+                        className="h-9"
                     />
                     <CommandList>
                         <CommandEmpty>Nenhum produto encontrado.</CommandEmpty>
                         <CommandGroup>
-                            {products.map((product) => (
-                                <CommandItem
-                                    key={product.id}
-                                    value={product.name}
-                                    onSelect={() => handleSelect(product.name)}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            selectedProducts.some((p) => p.id === product.id)
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                    {product.name} - R$ {product.price.toFixed(2).replace(".", ",")}
-                                </CommandItem>
-                            ))}
+                            {products
+                                .filter(prod => !selectedProducts.some(selected => selected.id === prod.id))
+                                .map((product) => {
+                                    console.log('Renderizando produto:', product);
+                                    return (
+                                        <CommandItem
+                                            key={product.id}
+                                            value={product.name}
+                                            onSelect={() => handleSelect(product.name)}
+                                            className="flex items-center justify-between py-3"
+                                        >
+                                            <div className="flex items-start gap-2">
+                                                <Check
+                                                    className={cn(
+                                                        "h-4 w-4 mt-1",
+                                                        selectedProducts.some((p) => p.id === product.id)
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">{product.name}</span>
+                                                    <span className="text-xs text-muted-foreground line-clamp-2">
+                                                        {product.description || "Sem descrição"}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span className="text-muted-foreground shrink-0">
+                                                R$ {product.price.toFixed(2).replace(".", ",")}
+                                            </span>
+                                        </CommandItem>
+                                    );
+                                })}
                         </CommandGroup>
                     </CommandList>
                 </Command>

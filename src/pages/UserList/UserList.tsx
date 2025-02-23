@@ -1,28 +1,28 @@
-import { ISupplier } from '@/@types/ISupplier';
+import { IUser } from '@/@types/IUser';
 import { StatusLabel } from '@/components/StatusLabel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useSupplier } from '@/context/SupplierContext';
+import { useUser } from '@/context/UserContext';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function SupplierList() {
+export default function UserList() {
     const { toast } = useToast();
-    const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
-    const [documentFilter, setDocumentFilter] = useState<string>('');
+    const [emailFilter, setEmailFilter] = useState<string>('');
     const [reload, setReload] = useState(false);
     const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
     const admin = localStorage.getItem('admin') === 'true';
-    const { setSupplier } = useSupplier();
+    const { setUser } = useUser();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+                const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export default function SupplierList() {
                     });
                     return;
                 }
-                setSuppliers(await response.json());
+                setUsers(await response.json());
             } catch (err: unknown) {
                 toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
@@ -50,31 +50,31 @@ export default function SupplierList() {
     }, [reload]);
 
     const handleCadaster = () => {
-        navigate('/suppliers/cadaster');
+        navigate('/users/cadaster');
     };
 
-    const handleEdit = (supplier: ISupplier) => {
-        setSupplier(supplier);
-        navigate('/suppliers/cadaster');
+    const handleEdit = (user: IUser) => {
+        setUser(user);
+        navigate('/users/cadaster');
     }
 
-    const handleChangeStatus = async (supplier: ISupplier) => {
-        const newSupplierActiveStatus = !supplier.active
+    const handleChangeStatus = async (user: IUser) => {
+        const newUserActiveStatus = !user.active
 
-        const supplierDataToUpdate = {
-            active: newSupplierActiveStatus
+        const userDataToUpdate = {
+            active: newUserActiveStatus
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'id': String(supplier.id)
+                    'id': String(user.id)
                 },
-                body: JSON.stringify(supplierDataToUpdate)
+                body: JSON.stringify(userDataToUpdate)
             });
 
             if (!response.ok) {
@@ -98,35 +98,35 @@ export default function SupplierList() {
         }
     };
 
-    const filteredSuppliers = suppliers.filter(supplier =>
-        supplier.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
-        supplier.document.includes(documentFilter)
+    const filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+        user.email.toLowerCase().includes(emailFilter.toLowerCase())
     );
 
-    const sortSuppliersByName = (order: 'asc' | 'desc') => {
-        const sortedSuppliers = [...filteredSuppliers].sort((a, b) => {
+    const sortUsersByName = (order: 'asc' | 'desc') => {
+        const sortedUsers = [...filteredUsers].sort((a, b) => {
             if (order === 'asc') {
                 return a.name.localeCompare(b.name);
             } else {
                 return b.name.localeCompare(a.name);
             }
         });
-        return sortedSuppliers;
+        return sortedUsers;
     };
-    const sortedSuppliers = sortSuppliersByName(nameSortOrder);
+    const sortedUsers = sortUsersByName(nameSortOrder);
 
     return (
         <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
             <div className='bg-white rounded-lg shadow-md p-6 space-y-6'>
                 {/* Header */}
                 <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
-                    <h1 className='text-2xl font-bold text-gray-900'>Fornecedores</h1>
+                    <h1 className='text-2xl font-bold text-gray-900'>Usuários</h1>
                     {admin && (
                         <Button 
                             onClick={handleCadaster}
                             className='bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors'
                         >
-                            Cadastrar Fornecedor
+                            Cadastrar Usuário
                         </Button>
                     )}
                 </div>
@@ -147,15 +147,15 @@ export default function SupplierList() {
                         />
                     </div>
                     <div className='space-y-2'>
-                        <label htmlFor='document-filter' className='text-sm font-medium text-gray-700'>
-                            Filtrar por CPF/CNPJ
+                        <label htmlFor='email-filter' className='text-sm font-medium text-gray-700'>
+                            Filtrar por Email
                         </label>
                         <Input
-                            id='document-filter'
+                            id='email-filter'
                             type='text'
-                            placeholder='Digite o CPF/CNPJ'
-                            value={documentFilter}
-                            onChange={(e) => setDocumentFilter(e.target.value)}
+                            placeholder='Digite o email'
+                            value={emailFilter}
+                            onChange={(e) => setEmailFilter(e.target.value)}
                             className='w-full'
                         />
                     </div>
@@ -176,31 +176,37 @@ export default function SupplierList() {
                 {/* Table */}
                 <div className='mt-6 overflow-hidden rounded-lg border border-gray-200'>
                     <Table>
-                        <TableCaption>Lista de fornecedores cadastrados</TableCaption>
+                        <TableCaption>Lista de usuários cadastrados</TableCaption>
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
-                                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Nome</TableHead>
-                                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>CPF/CNPJ</TableHead>
-                                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Contato</TableHead>
-                                <TableHead className='w-3/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Endereço</TableHead>
+                                <TableHead className='w-3/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Nome</TableHead>
+                                <TableHead className='w-3/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Email</TableHead>
+                                <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Admin</TableHead>
                                 <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Ativo</TableHead>
-                                <TableHead className='w-1/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Ações</TableHead>
+                                <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {sortedSuppliers.map((supplier) => (
+                            {sortedUsers.map((user) => (
                                 <TableRow 
-                                    key={supplier.document}
+                                    key={user.email}
                                     className='hover:bg-gray-50 transition-colors'
                                 >
-                                    <TableCell className='py-3 px-4'>{supplier.name}</TableCell>
-                                    <TableCell className='py-3 px-4'>{supplier.document}</TableCell>
-                                    <TableCell className='py-3 px-4'>{supplier.contact}</TableCell>
-                                    <TableCell className='py-3 px-4'>{supplier.address}</TableCell>
+                                    <TableCell className='py-3 px-4'>{user.name}</TableCell>
+                                    <TableCell className='py-3 px-4'>{user.email}</TableCell>
                                     <TableCell className='py-3 px-4'>
                                         <div className='flex justify-center'>
                                             <StatusLabel
-                                                isPrimary={supplier.active}
+                                                isPrimary={user.admin}
+                                                primaryText='Sim'
+                                                secondText='Não'
+                                            />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className='py-3 px-4'>
+                                        <div className='flex justify-center'>
+                                            <StatusLabel
+                                                isPrimary={user.active}
                                                 primaryText='Sim'
                                                 secondText='Não'
                                             />
@@ -210,15 +216,15 @@ export default function SupplierList() {
                                         <div className='flex justify-center gap-2'>
                                             <Button 
                                                 variant='destructive' 
-                                                onClick={() => handleChangeStatus(supplier)}
+                                                onClick={() => handleChangeStatus(user)}
                                                 className='px-3 py-1 text-xs'
                                             >
-                                                {supplier.active ? 'Desativar' : 'Ativar'}
+                                                {user.active ? 'Desativar' : 'Ativar'}
                                             </Button>
                                             {admin && (
                                                 <Button 
                                                     variant='outline'
-                                                    onClick={() => handleEdit(supplier)}
+                                                    onClick={() => handleEdit(user)}
                                                     className='px-3 py-1 text-xs text-gray-900 hover:text-gray-900 border-gray-200'
                                                 >
                                                     Editar
@@ -231,11 +237,11 @@ export default function SupplierList() {
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                <TableCell colSpan={5} className='py-3 px-4 text-sm font-medium'>
-                                    Total de Fornecedores
+                                <TableCell colSpan={4} className='py-3 px-4 text-sm font-medium'>
+                                    Total de Usuários
                                 </TableCell>
                                 <TableCell className='py-3 px-4 text-sm font-medium text-right'>
-                                    {filteredSuppliers.length}
+                                    {filteredUsers.length}
                                 </TableCell>
                             </TableRow>
                         </TableFooter>
@@ -244,4 +250,4 @@ export default function SupplierList() {
             </div>
         </section>
     );
-}
+} 

@@ -341,7 +341,7 @@ export default function ProductCadaster() {
     return (
         <section id="produc_cadaster" className="h-screen container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
             <header>
-                <h3>Cadastro de Produto</h3>
+                <h3 className="text-foreground text-xl font-semibold">Cadastro de Produto</h3>
                 {product &&
                     admin ?
                     <div className="flex justify-end">
@@ -356,7 +356,7 @@ export default function ProductCadaster() {
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="name">Imagem:</Label>
+                        <Label htmlFor="name" className="text-foreground">Imagem:</Label>
                         <Input id="image" type="file" className="w-full"
                             value={""}
                             onChange={handleImageChange} />

@@ -4,11 +4,14 @@ interface IStatusLabel {
     secondText: string;
 }
 
-const StatusLabel = ( {isPrimary, primaryText, secondText}: IStatusLabel) => {
+const StatusLabel = ({ isPrimary, primaryText, secondText }: IStatusLabel) => {
     return (
         <span
-            className={`px-2 py-1 rounded ${isPrimary ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
-                }`}
+            className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                isPrimary 
+                ? 'bg-[var(--color-primary-bg)] text-[var(--color-primary-dark)]' 
+                : 'bg-orange-50 text-orange-700'
+            } transition-colors`}
         >
             {isPrimary ? primaryText : secondText}
         </span>

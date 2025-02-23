@@ -3,108 +3,180 @@
 @tailwind utilities;
 
 :root {
+    /* Typography */
     --ff-sans: "Montserrat", system-ui, sans-serif;
     --fw-base: 400;
     --fw-md: 500;
-    --fw-bold: 800;
+    --fw-bold: 700;
+    --fw-extra: 800;
 
+    /* Font Sizes */
+    --fs-xs: 0.75rem;
     --fs-sm: 0.875rem;
     --fs-base: 1rem;
-    --fs-lg: 1.25rem;
-    --fs-xl: 1.75rem;
-    --fs-2xl: 2.25rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: 1.25rem; 
+    --fs-2xl: 1.5rem;
+    --fs-3xl: 2rem;
+    --fs-4xl: 2.5rem;
 
-    --py-esm: 0.5rem;
-    --py-sm: 0.875rem;
-    --py-base: 1rem;
-    --py-lg: 1.5rem;
-    --py-xl: 3rem;
-    --px-lg: 1.5rem;
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* Colors */
+    --color-primary: #16A34A;
+    --color-primary-dark: #15803D;
+    --color-primary-light: #22C55E;
+    --color-primary-bg: #F0FDF4;
+    
+    --color-secondary: #334155;
+    --color-secondary-dark: #1E293B;
+    --color-secondary-light: #64748B;
+    
+    --color-gray-50: #F8FAFC;
+    --color-gray-100: #F1F5F9;
+    --color-gray-200: #E2E8F0;
+    --color-gray-300: #CBD5E1;
+    --color-gray-400: #94A3B8;
+    --color-gray-500: #64748B;
+    --color-gray-600: #475569;
+    --color-gray-700: #334155;
+    --color-gray-800: #1E293B;
+    --color-gray-900: #0F172A;
+    
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+    --color-info: #3B82F6;
+
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 1rem;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+    /* Transitions */
+    --transition-all: all 0.3s ease;
+    --transition-colors: color 0.3s ease, background-color 0.3s ease;
+    --transition-transform: transform 0.3s ease;
 }
 
+/* Base Styles */
 html {
     font-family: var(--ff-sans);
     font-weight: var(--fw-base);
     font-size: var(--fs-base);
     line-height: 1.6;
-    color: var(--text-color);
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    box-sizing: border-box;
+    color: var(--color-gray-800);
+    background-color: var(--color-gray-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
-h1,
-h2,
-h3 {
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
     line-height: 1.2;
-    color: #343A40;
+    color: var(--color-gray-900);
     font-weight: var(--fw-bold);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
 }
 
-h1 {
-    font-size: var(--fs-2xl);
-}
+h1 { font-size: var(--fs-4xl); }
+h2 { font-size: var(--fs-3xl); }
+h3 { font-size: var(--fs-2xl); }
+h4 { font-size: var(--fs-xl); }
+h5 { font-size: var(--fs-lg); }
+h6 { font-size: var(--fs-base); }
 
-h2 {
-    font-size: var(--fs-xl);
-}
-
-h3 {
-    font-size: var(--fs-lg);
-}
-
+/* Links */
 a {
     text-decoration: none;
-    color: var(--second-text-color);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-sm);
+    color: var(--color-gray-700);
+    font-weight: var(--fw-md);
+    transition: var(--transition-colors);
 }
 
 a:hover {
-    color: var(--primary-color);
+    color: var(--color-primary);
 }
 
-img {
-    max-width: 100%;
-    display: inline-block;
+/* Buttons */
+button {
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-md);
+    font-family: inherit;
+    background-color: var(--color-primary);
+    color: white;
+    cursor: pointer;
+    transition: var(--transition-all);
 }
 
-ul {
-    list-style: none;
+button:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
 }
 
-@media (width >=1280px) {
+button:focus,
+button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 1280px) {
     :root {
-        --fs-lg: 2rem;
-        --fs-xl: 2.625rem;
-        --fs-2xl: 4rem;
-
-        --py-sm: 1rem;
-        --py-base: 1.5rem;
-        --py-lg: 2.5rem;
-        --py-xl: 5rem;
-        --pg-lg: 2rem;
+        --fs-base: 1.125rem;
+        --fs-lg: 1.25rem;
+        --fs-xl: 1.5rem;
+        --fs-2xl: 2rem;
+        --fs-3xl: 2.5rem;
+        --fs-4xl: 3rem;
     }
 }
 
-
-@media (prefers-color-scheme: light) {
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
     :root {
-        color: #213547;
-        background-color: #000;
+        --color-primary: #22C55E;
+        --color-primary-dark: #16A34A;
+        --color-primary-light: #4ADE80;
+        --color-primary-bg: #052E16;
+    }
+
+    html {
+        color: var(--color-gray-100);
+        background-color: var(--color-gray-900);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--color-gray-50);
+    }
+
+    a {
+        color: var(--color-gray-300);
     }
 
     a:hover {
-        color: #747bff;
-    }
-
-    button {
-        background-color: #f9f9f9;
+        color: var(--color-primary-light);
     }
 }
 
@@ -173,25 +245,4 @@ ul {
     body {
         @apply bg-background text-foreground;
     }
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-
-button:hover {
-    border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
