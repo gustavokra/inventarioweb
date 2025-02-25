@@ -1,5 +1,8 @@
+import { IProduct } from "./IProduct";
+
 export interface IItemPDV {
     produtoId: number;
+    product: IProduct;
     quantidade: number;
     valorUnitario: number;
     desconto?: number;

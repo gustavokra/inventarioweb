@@ -21,6 +21,7 @@ export default function OrderList() {
     const [reload, setReload] = useState(false);
     const { setOrder } = useOrder();
     const navigate = useNavigate();
+    const [dateOrder, setDateOrder] = useState<'asc' | 'desc'>('desc');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +45,6 @@ export default function OrderList() {
                     return;
                 }
                 setOrders(await response.json());
-                console.log(orders);
             } catch (err: unknown) {
                 toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
@@ -64,13 +64,16 @@ export default function OrderList() {
 
     const handleCompleteOrder = async (order: IOrder) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8080/api/v1/order/${order.id}/complete`, {
+            const updatedOrder = { ...order, enumStatus: 'COMPLETED' };
+            const response = await fetch(`http://127.0.0.1:8080/api/v1/order/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'id': String(order.id)
                 },
+                body: JSON.stringify(updatedOrder)
             });
 
             if (!response.ok) {
@@ -111,6 +114,10 @@ export default function OrderList() {
                 order.client.document.toLowerCase().includes(clientFilter.toLowerCase())) &&
             orderStatus.includes(enumStatusFilter.toLowerCase()) &&
             hasMatchingProduct;
+    }).sort((a, b) => {
+        const dateA = new Date(a.createdAt || '').getTime();
+        const dateB = new Date(b.createdAt || '').getTime();
+        return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
 
     return (
@@ -121,9 +128,9 @@ export default function OrderList() {
                     <h1 className='text-2xl font-bold text-gray-900'>Pedidos</h1>
                     <Button 
                         onClick={handleCadaster}
-                        className='bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors'
+                        className="bg-zinc-900 hover:bg-zinc-800 text-white transition-colors"
                     >
-                        Cadastrar Pedido
+                        Novo Pedido
                     </Button>
                 </div>
 
@@ -190,16 +197,23 @@ export default function OrderList() {
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
                                 <TableHead className='w-1/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Id</TableHead>
-                                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Data</TableHead>
+                                <TableHead 
+                                    className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
+                                    onClick={() => setDateOrder(dateOrder === 'asc' ? 'desc' : 'asc')}
+                                >
+                                    Data {dateOrder === 'asc' ? '↑' : '↓'}
+                                </TableHead>
                                 <TableHead className='w-4/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Cliente</TableHead>
+                                <TableHead className='w-2/12 text-right py-3 px-4 text-sm font-medium text-gray-900'>Subtotal (R$)</TableHead>
+                                <TableHead className='w-2/12 text-right py-3 px-4 text-sm font-medium text-gray-900'>Desconto (R$)</TableHead>
                                 <TableHead className='w-2/12 text-right py-3 px-4 text-sm font-medium text-gray-900'>Total (R$)</TableHead>
                                 <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Situação</TableHead>
+                                <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Gerado no Caixa</TableHead>
                                 <TableHead className='w-1/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filteredOrders.map((order) => (
-                                console.log(order),
                                 <React.Fragment key={order.id}>
                                     <TableRow 
                                         className='hover:bg-gray-50 transition-colors cursor-pointer'
@@ -209,15 +223,26 @@ export default function OrderList() {
                                         <TableCell className='py-3 px-4'>{FormatDate(order.createdAt)}</TableCell>
                                         <TableCell className='py-3 px-4'>{order.client.name} - {order.client.document}</TableCell>
                                         <TableCell className='py-3 px-4 text-right'>
+                                            {((order.totalValue || 0) + (order.discount || 0)).toFixed(2).replace('.', ',')}
+                                        </TableCell>
+                                        <TableCell className='py-3 px-4 text-right'>
+                                            {(order.discount || 0).toFixed(2).replace('.', ',')}
+                                        </TableCell>
+                                        <TableCell className='py-3 px-4 text-right'>
                                             {order.totalValue?.toFixed(2).replace('.', ',') || '0,00'}
                                         </TableCell>
                                         <TableCell className='py-3 px-4'>
                                             <div className='flex justify-center'>
                                                 <StatusLabel
-                                                    isPrimary={order.enumStatus === 'completed'}
+                                                    isPrimary={order.enumStatus === 'COMPLETED'}
                                                     primaryText='Finalizado'
                                                     secondText='Pendente'
                                                 />
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className='py-3 px-4'>
+                                            <div className='flex justify-center'>
+                                                {order.geradoNoCaixa ? 'Sim' : 'Não'}
                                             </div>
                                         </TableCell>
                                         <TableCell className='py-3 px-4' onClick={(e) => e.stopPropagation()}>
@@ -232,9 +257,9 @@ export default function OrderList() {
                                                     </Button>
                                                 )}
                                                 <Button 
-                                                    variant='outline'
+                                                    variant="outline"
                                                     onClick={() => handleEdit(order)}
-                                                    className='px-3 py-1 text-xs text-gray-900 hover:text-gray-900 border-gray-200'
+                                                    className="border-green-600 text-green-700 hover:bg-green-600 hover:text-white transition-colors"
                                                 >
                                                     Editar
                                                 </Button>
@@ -243,8 +268,18 @@ export default function OrderList() {
                                     </TableRow>
                                     {expandedOrderId === order.id && (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="bg-gray-50 p-4">
+                                            <TableCell colSpan={10} className="bg-gray-50 p-4">
                                                 <div className="space-y-6">
+                                                    {/* Seção de Observação */}
+                                                    {order.observacao && (
+                                                        <div className="space-y-2">
+                                                            <h3 className="font-semibold text-lg">Observação</h3>
+                                                            <p className="text-sm text-gray-700">
+                                                                {order.observacao}
+                                                            </p>
+                                                        </div>
+                                                    )}
+
                                                     {/* Seção de Itens */}
                                                     <div className="space-y-4">
                                                         <h3 className="font-semibold text-lg">Itens do Pedido</h3>
@@ -289,8 +324,16 @@ export default function OrderList() {
                                                                 </div>
                                                             </div>
                                                         ))}
-                                                        <div className="text-right text-sm font-medium text-gray-900 pt-2">
-                                                            Total: R$ {order.totalValue?.toFixed(2).replace('.', ',') || '0,00'}
+                                                        <div className="flex text-right text-sm font-medium text-gray-900 pt-2 grid grid-cols-2 gap-4 justify-end">
+                                                            <div className="col-span-2">
+                                                                Subtotal: R$ {((order.totalValue || 0) + (order.discount || 0)).toFixed(2).replace('.', ',')}
+                                                            </div>
+                                                            <div className="col-span-2">
+                                                                Desconto: R$ {(order.discount || 0).toFixed(2).replace('.', ',')}
+                                                            </div>
+                                                            <div className="col-span-2">
+                                                                Total Final: R$ {order.totalValue?.toFixed(2).replace('.', ',') || '0,00'}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

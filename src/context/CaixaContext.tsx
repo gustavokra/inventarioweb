@@ -11,7 +11,7 @@ const CaixaContext = createContext<ContextoCaixaType | undefined>(undefined);
 
 export function CaixaProvider({ children }: { children: React.ReactNode }) {
     const [operacaoAtual, setOperacaoAtual] = useState<IOperacaoCaixa | null>(null);
-    const estaAberto = operacaoAtual?.situacao === 'aberto';
+    const estaAberto = operacaoAtual?.situacao === 'ABERTO';
 
     return (
         <CaixaContext.Provider value={{ operacaoAtual, setOperacaoAtual, estaAberto }}>

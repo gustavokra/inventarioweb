@@ -102,7 +102,9 @@ export default function Register() {
                             />
                         </span>
                         <div className='actions'>
-                            <Button type='submit' variant='default' size={'submit'}>Cadastrar</Button>
+                            <Button type='submit' className='bg-zinc-900 hover:bg-zinc-800 text-white w-full'>
+                                Cadastrar
+                            </Button>
                         </div>
                     </div>
                 </section>

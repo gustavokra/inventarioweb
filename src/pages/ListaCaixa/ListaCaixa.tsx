@@ -10,17 +10,26 @@ export default function ListaCaixa() {
     const { toast } = useToast();
     const [operacoes, setOperacoes] = useState<IOperacaoCaixa[]>([]);
     const navigate = useNavigate();
+    const { setOperacaoAtual } = useCaixa();
+    const [caixaAberto, setCaixaAberto] = useState<IOperacaoCaixa | null>(null);
 
     useEffect(() => {
         fetchOperacoes();
     }, []);
 
+    useEffect(() => {
+        // Encontrar operação aberta quando a lista de operações for atualizada
+        const operacaoAberta = operacoes.find(op => op.situacao === 'ABERTO');
+        setCaixaAberto(operacaoAberta || null);
+    }, [operacoes]);
+
     const fetchOperacoes = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/caixa', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/operacao-caixa', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'dbImpl': 'SQLITE',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             });
@@ -36,6 +45,7 @@ export default function ListaCaixa() {
             }
 
             const data = await response.json();
+            console.log(data);
             setOperacoes(data);
         } catch (err) {
             toast({
@@ -54,16 +64,27 @@ export default function ListaCaixa() {
         return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     };
 
+    const handleCaixaClick = () => {
+        if (caixaAberto) {
+            // Se há um caixa aberto, configura ele como atual e navega para fechamento
+            setOperacaoAtual(caixaAberto);
+            navigate('/caixa');
+        } else {
+            // Se não há caixa aberto, navega para abertura de novo caixa
+            navigate('/caixa');
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto p-6">
             <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold">Operações de Caixa</h1>
                     <Button 
-                        onClick={() => navigate('/caixa')}
+                        onClick={handleCaixaClick}
                         className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
                     >
-                        Gerenciar Caixa
+                        {caixaAberto ? 'Fechar Caixa' : 'Abrir Caixa'}
                     </Button>
                 </div>
 
@@ -74,8 +95,8 @@ export default function ListaCaixa() {
                             <TableHead>Data Abertura</TableHead>
                             <TableHead>Data Fechamento</TableHead>
                             <TableHead>Saldo Inicial</TableHead>
-                            <TableHead>Total Vendas</TableHead>
                             <TableHead>Saldo Final</TableHead>
+                            <TableHead>Total Movimentado</TableHead>
                             <TableHead>Situação</TableHead>
                             <TableHead>Observações</TableHead>
                         </TableRow>
@@ -88,17 +109,17 @@ export default function ListaCaixa() {
                                     {operacao.dataFechamento ? formatarData(operacao.dataFechamento) : '-'}
                                 </TableCell>
                                 <TableCell>{formatarMoeda(operacao.saldoInicial)}</TableCell>
-                                <TableCell>{formatarMoeda(operacao.totalVendas || 0)}</TableCell>
                                 <TableCell>
                                     {operacao.saldoFinal ? formatarMoeda(operacao.saldoFinal) : '-'}
                                 </TableCell>
+                                <TableCell>{formatarMoeda(operacao.totalMovimentado || 0)}</TableCell>
                                 <TableCell>
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                        operacao.situacao === 'aberto' 
+                                        operacao.situacao === 'ABERTO' 
                                             ? 'bg-green-100 text-green-800' 
                                             : 'bg-red-100 text-red-800'
                                     }`}>
-                                        {operacao.situacao === 'aberto' ? 'Aberto' : 'Fechado'}
+                                        {operacao.situacao === 'ABERTO' ? 'Aberto' : 'Fechado'}
                                     </span>
                                 </TableCell>
                                 <TableCell>{operacao.observacoes || '-'}</TableCell>

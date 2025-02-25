@@ -81,7 +81,6 @@ export function ProductCombobox({
                             {products
                                 .filter(prod => !selectedProducts.some(selected => selected.id === prod.id))
                                 .map((product) => {
-                                    console.log('Renderizando produto:', product);
                                     return (
                                         <CommandItem
                                             key={product.id}

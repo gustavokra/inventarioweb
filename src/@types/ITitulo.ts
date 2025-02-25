@@ -5,4 +5,5 @@ export interface ITitulo {
     numeroParcelas: number;
     valorParcelas: number;
     idPedido: number;
+    geradoNoCaixa: boolean;
 }

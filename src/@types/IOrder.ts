@@ -7,7 +7,10 @@ export interface IOrder {
     createdAt?: string,
     client: IClient,
     totalValue?: number,
+    discount?: number,
     enumStatus: string,
     items: IOrderItem[],
     titulos: ITitulo[],
+    geradoNoCaixa?: boolean,
+    observacao?: string
 }

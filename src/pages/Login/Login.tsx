@@ -37,6 +37,7 @@ export default function Login() {
             console.log('Usuário logado com sucesso:', data);
             localStorage.setItem('token', data.token);
             localStorage.setItem('admin', data.admin);
+            localStorage.setItem('userId', data.userId);
             navigate('/clients');
         } catch (error) {
             console.error('Erro ao logar usuário:', error);
@@ -67,7 +68,9 @@ export default function Login() {
                             onChange={(e) => setPassword(e.target.value)}></Input>
                     </span>
                     <div className='actions'>
-                        <Button type='submit' variant='default' size={'submit'}>Logar</Button>
+                        <Button type='submit' className='bg-zinc-900 hover:bg-zinc-800 text-white w-full' size={'submit'}>
+                            Logar
+                        </Button>
                     </div>
                 </div>
             </section>

@@ -24,6 +24,7 @@ export default function CadastroPedido() {
     // Estados
     const [id, setId] = useState(0);
     const [client, setClient] = useState<IClient>();
+    const [observacao, setObservacao] = useState<string>('');
     const [totalValue, setTotalValue] = useState<number>(0);
     const [items, setItems] = useState<IOrderItem[]>([]);
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -32,6 +33,7 @@ export default function CadastroPedido() {
     const [formasPagamento, setFormasPagamento] = useState<IFormaPagamento[]>([]);
     const [pagamentos, setPagamentos] = useState<ITitulo[]>([]);
     const [valorRestante, setValorRestante] = useState<number>(0);
+    const [discount, setDiscount] = useState<number>(0);
 
     // Efeitos
     useEffect(() => {
@@ -43,12 +45,13 @@ export default function CadastroPedido() {
             setId(order.id ? order.id : 0)
             setClient(order.client);
             setItems(order.items);
-            setPagamentos(order.titulos || []);    
+            setPagamentos(order.titulos || []);
+            setObservacao(order.observacao || '');
         }
     }, [order]);
 
     useEffect(() => {
-        const totalPedido = parseFloat(calcularValorTotalPedido().replace(',', '.'));
+        const totalPedido = calcularValorTotalPedido();
         setValorRestante(totalPedido);
     }, [items]);
 
@@ -63,11 +66,12 @@ export default function CadastroPedido() {
             const quantidade = item.quantity || 0;
             return total + (preco * quantidade);
         }, 0);
-        return total.toFixed(2).replace('.', ',');
+        const totalComDesconto = total - discount;
+        return totalComDesconto < 0 ? 0 : totalComDesconto;
     }
 
     const atualizarValorRestante = () => {
-        const totalPedido = parseFloat(calcularValorTotalPedido().replace(',', '.'));
+        const totalPedido = calcularValorTotalPedido();
         const totalPago = pagamentos.reduce((acc, curr) => acc + (curr.valorParcelas || 0), 0);
         setValorRestante(totalPedido - totalPago);
     };
@@ -97,10 +101,10 @@ export default function CadastroPedido() {
     const atualizarQuantidadeProduto = (item: IOrderItem, e: React.ChangeEvent<HTMLInputElement>) => {
         const novaQuantidade = e.target.value ? parseInt(e.target.value) : 1;
         setItems(prev =>
-            prev.map(prevItem => 
-                prevItem.product.id === item.product.id 
-                ? { ...prevItem, quantity: novaQuantidade } 
-                : prevItem
+            prev.map(prevItem =>
+                prevItem.product.id === item.product.id
+                    ? { ...prevItem, quantity: novaQuantidade }
+                    : prevItem
             )
         );
     }
@@ -125,12 +129,13 @@ export default function CadastroPedido() {
             }
 
             const valorInicial = pagamentos.length === 0 ? valorRestante : 0;
-            
+
             const novoPagamento: ITitulo = {
                 formaPagamento: forma,
                 numeroParcelas: 1,
                 valorParcelas: valorInicial,
-                idPedido: order?.id ?? 0
+                idPedido: order?.id ?? 0,
+                geradoNoCaixa: false,
             };
             setPagamentos(prev => [...prev, novoPagamento]);
         }
@@ -184,10 +189,10 @@ export default function CadastroPedido() {
 
             setClients(await response.json());
         } catch (err: unknown) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao buscar clientes. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao buscar clientes. Tente novamente ou contate o suporte."
             });
         }
     };
@@ -217,10 +222,10 @@ export default function CadastroPedido() {
             console.log('Produtos recebidos:', produtos);
             setProducts(produtos);
         } catch (err: unknown) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao buscar produtos. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao buscar produtos. Tente novamente ou contate o suporte."
             });
         }
     };
@@ -248,10 +253,10 @@ export default function CadastroPedido() {
 
             setFormasPagamento(await response.json());
         } catch (err: unknown) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao buscar formas de pagamento. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao buscar formas de pagamento. Tente novamente ou contate o suporte."
             });
         }
     };
@@ -260,20 +265,20 @@ export default function CadastroPedido() {
         event.preventDefault();
 
         if (!client) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro", 
-                description: "Campo cliente é obrigatório." 
+            toast({
+                variant: "destructive",
+                title: "Erro",
+                description: "Campo cliente é obrigatório."
             });
             return;
         }
 
         // Calculando valor total do pedido e total dos pagamentos
-        const valorTotalPedido = parseFloat(calcularValorTotalPedido().replace(',', '.'));
+        const valorTotalPedido = calcularValorTotalPedido();
         const valorTotalPagamentos = pagamentos.reduce((acc, curr) => acc + (curr.valorParcelas || 0), 0);
 
         // Verificando se os valores são iguais (com margem de erro de 0.01 para evitar problemas com decimais)
-        if (Math.abs(valorTotalPedido - valorTotalPagamentos) > 0.01) {
+        if (Math.abs(valorTotalPedido - (valorTotalPagamentos - discount)) > 0.01) {
             if (valorTotalPagamentos < valorTotalPedido) {
                 toast({
                     variant: "destructive",
@@ -297,6 +302,9 @@ export default function CadastroPedido() {
             enumStatus: "PENDING",
             items,
             titulos: pagamentos,
+            observacao: observacao,
+            totalValue: valorTotalPedido,
+            discount: discount
         };
 
         order ? atualizarPedido(dadosPedido) : cadastrarPedido(dadosPedido);
@@ -329,17 +337,17 @@ export default function CadastroPedido() {
                 return;
             }
 
-            toast({ 
-                variant: "default", 
-                title: "Sucesso!", 
-                description: "Cadastro realizado com sucesso." 
+            toast({
+                variant: "default",
+                title: "Sucesso!",
+                description: "Cadastro realizado com sucesso."
             });
             finalizarSubmissao();
         } catch (error) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao cadastrar. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao cadastrar. Tente novamente ou contate o suporte."
             });
         }
     }
@@ -367,17 +375,17 @@ export default function CadastroPedido() {
                 return;
             }
 
-            toast({ 
-                variant: "default", 
-                title: "Sucesso!", 
-                description: "Atualização realizada com sucesso." 
+            toast({
+                variant: "default",
+                title: "Sucesso!",
+                description: "Atualização realizada com sucesso."
             });
             finalizarSubmissao();
         } catch (err: unknown) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao atualizar. Tente novamente ou contate o suporte."
             });
         }
     };
@@ -404,17 +412,17 @@ export default function CadastroPedido() {
                 return;
             }
 
-            toast({ 
-                variant: "default", 
-                title: "Sucesso!", 
-                description: "Exclusão realizada com sucesso." 
+            toast({
+                variant: "default",
+                title: "Sucesso!",
+                description: "Exclusão realizada com sucesso."
             });
             finalizarSubmissao();
         } catch (err: unknown) {
-            toast({ 
-                variant: "destructive", 
-                title: "Erro inesperado", 
-                description: "Ocorreu um erro ao excluir. Tente novamente ou contate o suporte." 
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado",
+                description: "Ocorreu um erro ao excluir. Tente novamente ou contate o suporte."
             });
         }
     };
@@ -436,7 +444,7 @@ export default function CadastroPedido() {
                     <h4 className="mb-4">Dados do Cliente</h4>
                     <div>
                         <Label htmlFor="client">Cliente:</Label>
-                        <Select 
+                        <Select
                             value={client?.id ? String(client.id) : ""}
                             onValueChange={(value) => {
                                 const clienteSelecionado = clients?.find((cli) => String(cli.id) === value);
@@ -449,7 +457,7 @@ export default function CadastroPedido() {
                             <SelectContent>
                                 <SelectGroup>
                                     {clients && clients.map((cli) => (
-                                        <SelectItem 
+                                        <SelectItem
                                             key={cli.id}
                                             value={String(cli.id)}
                                         >
@@ -474,7 +482,7 @@ export default function CadastroPedido() {
                             handleSelectProduct={adicionarProduto}
                         />
                     </div>
-                    
+
                     <Table>
                         <TableCaption>Produtos Selecionados</TableCaption>
                         <TableHeader>
@@ -495,11 +503,11 @@ export default function CadastroPedido() {
                                     </TableCell>
                                     <TableCell className='text-left'>{item.product.name}</TableCell>
                                     <TableCell className='text-right'>
-                                        <Input 
-                                            className='text-right' 
-                                            maxLength={10} 
+                                        <Input
+                                            className='text-right'
+                                            maxLength={10}
                                             value={item.quantity}
-                                            onChange={(e) => atualizarQuantidadeProduto(item, e)} 
+                                            onChange={(e) => atualizarQuantidadeProduto(item, e)}
                                         />
                                     </TableCell>
                                     <TableCell className='text-right'>
@@ -509,9 +517,9 @@ export default function CadastroPedido() {
                                         {(item.quantity * item.unitPrice).toFixed(2).replace('.', ',')}
                                     </TableCell>
                                     <TableCell className='text-center'>
-                                        <Button 
-                                            variant='destructive' 
-                                            className='w-10/12' 
+                                        <Button
+                                            variant='destructive'
+                                            className='w-10/12'
                                             onClick={() => removerProduto(item)}
                                         >
                                             Remover
@@ -526,7 +534,15 @@ export default function CadastroPedido() {
                                     Total de Itens: {items.length}
                                 </TableCell>
                                 <TableCell className='text-right' colSpan={3}>
-                                    Valor Total: R$ {calcularValorTotalPedido()}
+                                    Valor Total: R$ {calcularValorTotalPedido().toFixed(2).replace('.', ',')}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className='text-left' colSpan={3}>
+                                    Desconto: R$ {discount.toFixed(2).replace('.', ',')}
+                                </TableCell>
+                                <TableCell className='text-right' colSpan={3}>
+                                    Valor Total com Desconto: R$ {(calcularValorTotalPedido()).toFixed(2).replace('.', ',')}
                                 </TableCell>
                             </TableRow>
                         </TableFooter>
@@ -604,7 +620,7 @@ export default function CadastroPedido() {
                                         />
                                     </TableCell>
                                     <TableCell>
-                                        {pagamento.numeroParcelas > 0 
+                                        {pagamento.numeroParcelas > 0
                                             ? (pagamento.valorParcelas / pagamento.numeroParcelas).toFixed(2).replace('.', ',')
                                             : '0,00'
                                         }
@@ -614,6 +630,7 @@ export default function CadastroPedido() {
                                             variant="destructive"
                                             type="button"
                                             onClick={() => removerPagamento(index)}
+                                            className="bg-red-600 hover:bg-red-700 text-white"
                                         >
                                             Remover
                                         </Button>
@@ -623,17 +640,47 @@ export default function CadastroPedido() {
                         </TableBody>
                     </Table>
                 </section>
-
+                {/* Nova Seção de Observação */}
+                <section className="border p-4 rounded-lg">
+                    <h4 className="mb-4">Observação</h4>
+                    <div>
+                        <Label htmlFor="observacao">Observação do Pedido:</Label>
+                        <textarea
+                            id="observacao"
+                            className="w-full min-h-[100px] p-2 border rounded-md"
+                            value={observacao}
+                            onChange={(e) => setObservacao(e.target.value)}
+                            placeholder="Digite uma observação para o pedido..."
+                        />
+                    </div>
+                </section>
+                {/* Seção Final de Resumo do Pedido */}
+                <section className="border p-4 rounded-lg">
+                    <h4 className="mb-4">Resumo do Pedido</h4>
+                    <div>
+                        <Label htmlFor="discount">Desconto (R$):</Label>
+                        <Input
+                            type="number"
+                            id="discount"
+                            value={discount}
+                            onChange={(e) => setDiscount(Number(e.target.value))}
+                            placeholder="Digite o valor do desconto"
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <p>Total do Pedido: R$ {calcularValorTotalPedido().toFixed(2).replace('.', ',')}</p>
+                        <p>Total com Desconto: R$ {(calcularValorTotalPedido()).toFixed(2).replace('.', ',')}</p>
+                    </div>
+                </section>
                 <div className='flex flex-col md:flex-row gap-4 mt-4'>
-                    <Button 
-                        className='md:w-1/4 order-2 md:order-1' 
-                        variant='destructive'
+                    <Button
+                        className='md:w-1/4 order-2 md:order-1 bg-red-600 hover:bg-red-700 text-white'
                         onClick={voltarParaLista}
                     >
                         Voltar para Lista
                     </Button>
-                    <Button 
-                        className='md:w-3/4 order-1 md:order-2' 
+                    <Button
+                        className='md:w-3/4 order-1 md:order-2 bg-zinc-900 hover:bg-zinc-800 text-white'
                         variant='default'
                     >
                         {order ? 'Atualizar Pedido' : 'Cadastrar Pedido'}

@@ -174,14 +174,13 @@ export default function CadastroFormaPagamento() {
 
                 <div className='flex flex-col md:flex-row gap-4 mt-4'>
                     <Button 
-                        className='md:w-1/4 order-2 md:order-1' 
-                        variant='destructive'
+                        className='md:w-1/4 order-2 md:order-1 bg-red-600 hover:bg-red-700 text-white' 
                         onClick={returnToList}
                     >
                         Voltar para lista
                     </Button>
                     <Button 
-                        className='md:w-3/4 order-1 md:order-2' 
+                        className='md:w-3/4 order-1 md:order-2 bg-zinc-900 hover:bg-zinc-800 text-white' 
                         variant='default'
                     >
                         {formaPagamento ? 'Atualizar' : 'Cadastrar'}

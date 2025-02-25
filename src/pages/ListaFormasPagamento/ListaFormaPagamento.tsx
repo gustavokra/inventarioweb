@@ -61,9 +61,9 @@ export default function ListaFormaPagamento() {
                     <h1 className='text-2xl font-bold text-gray-900'>Formas de Pagamento</h1>
                     <Button 
                         onClick={handleCadaster}
-                        className='bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors'
+                        className='bg-zinc-900 hover:bg-zinc-800 text-white transition-colors'
                     >
-                        Cadastrar
+                        Cadastrar Forma de Pagamento
                     </Button>
                 </div>
 
@@ -88,7 +88,7 @@ export default function ListaFormaPagamento() {
                                             <Button 
                                                 variant="outline" 
                                                 onClick={() => handleEdit(formaPagamento)}
-                                                className='px-3 py-1 text-xs text-gray-900 hover:text-gray-900 border-gray-200'
+                                                className='border-green-600 text-green-700 hover:bg-green-600 hover:text-white transition-colors'
                                             >
                                                 Editar
                                             </Button>
