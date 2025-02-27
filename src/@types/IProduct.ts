@@ -9,6 +9,7 @@ export interface IProduct {
     description: string;
     marca?: IMarca;
     grupo?: IGrupo;
+    costPrice: number;
     price: number;
     quantity: number;
     supplier?: ISupplier;

@@ -17,6 +17,7 @@ export default function ProductCadaster() {
     const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [costPrice, setCostPrice] = useState<number>(0);
     const [price, setPrice] = useState<number>(0);
     const [quantity, setQuantity] = useState<number>(0);
     const [suppliers, setSuppliers] = useState<ISupplier[]>();
@@ -124,6 +125,7 @@ export default function ProductCadaster() {
             setId(product.id ? product.id : 0)
             setName(product.name)
             setDescription(product.description)
+            setCostPrice(product.costPrice)
             setPrice(product.price)
             setQuantity(product.quantity)
             setSupplier(product.supplier)
@@ -161,6 +163,7 @@ export default function ProductCadaster() {
             description,
             marca,
             grupo,
+            costPrice,
             price,
             quantity,
             supplier,
@@ -176,7 +179,6 @@ export default function ProductCadaster() {
     };
 
     const registerProduct = async (prodcutDataToRegister: IProduct) => {
-        console.log("olá")
         try {
             const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'POST',
@@ -499,6 +501,13 @@ export default function ProductCadaster() {
                         <Input id="description" type="text" className="w-full" placeholder="Digite a descrição"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)} />
+                    </div>
+                    <div className="md:col-span-2">
+                        <Label htmlFor="cost_price">Custo (R$):</Label>
+                        <Input id="cost_price" maxLength={10} className="w-full"
+                            placeholder="Digite o custo"
+                            value={costPrice.toFixed(2).replace('.', ',')}
+                            onChange={(e) => setCostPrice(e.target.value ? parseFloat(e.target.value) : 1.0)} />
                     </div>
                     <div className="md:col-span-2">
                         <Label htmlFor="price">Preço (R$):</Label>

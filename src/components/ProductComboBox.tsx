@@ -105,7 +105,7 @@ export function ProductCombobox({
                                                 </div>
                                             </div>
                                             <span className="text-muted-foreground shrink-0">
-                                                R$ {product.price.toFixed(2).replace(".", ",")}
+                                                R$ {product.price?.toFixed(2).replace(".", ",")}
                                             </span>
                                         </CommandItem>
                                     );

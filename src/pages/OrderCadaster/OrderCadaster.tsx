@@ -47,11 +47,12 @@ export default function CadastroPedido() {
             setItems(order.items);
             setPagamentos(order.titulos || []);
             setObservacao(order.observacao || '');
+            setDiscount(order.discount || 0);
         }
     }, [order]);
 
     useEffect(() => {
-        const totalPedido = calcularValorTotalPedido();
+        const totalPedido = calcularTotal();
         setValorRestante(totalPedido);
     }, [items]);
 
@@ -60,18 +61,23 @@ export default function CadastroPedido() {
     }, [pagamentos]);
 
     // Funções de Cálculo
-    const calcularValorTotalPedido = () => {
-        const total = items.reduce((total, item) => {
+    const calcularSubtotal = () => {
+        const subtotal = items.reduce((total, item) => {
             const preco = item.unitPrice || 0;
             const quantidade = item.quantity || 0;
             return total + (preco * quantidade);
         }, 0);
-        const totalComDesconto = total - discount;
-        return totalComDesconto < 0 ? 0 : totalComDesconto;
+        console.log(subtotal)
+        return subtotal;
+    }
+
+    const calcularTotal = () => {
+        const subtotal = calcularSubtotal();
+        return subtotal - discount;
     }
 
     const atualizarValorRestante = () => {
-        const totalPedido = calcularValorTotalPedido();
+        const totalPedido = calcularTotal();
         const totalPago = pagamentos.reduce((acc, curr) => acc + (curr.valorParcelas || 0), 0);
         setValorRestante(totalPedido - totalPago);
     };
@@ -274,12 +280,15 @@ export default function CadastroPedido() {
         }
 
         // Calculando valor total do pedido e total dos pagamentos
-        const valorTotalPedido = calcularValorTotalPedido();
+        const valorTotalPedido = calcularTotal();
         const valorTotalPagamentos = pagamentos.reduce((acc, curr) => acc + (curr.valorParcelas || 0), 0);
 
         // Verificando se os valores são iguais (com margem de erro de 0.01 para evitar problemas com decimais)
-        if (Math.abs(valorTotalPedido - (valorTotalPagamentos - discount)) > 0.01) {
-            if (valorTotalPagamentos < valorTotalPedido) {
+        console.log((valorTotalPedido + discount))
+        console.log(valorTotalPagamentos)
+
+        if ((valorTotalPedido + discount) - valorTotalPagamentos > 0.01) {
+            if (valorTotalPagamentos < valorTotalPedido + discount) {
                 toast({
                     variant: "destructive",
                     title: "Erro no pagamento",
@@ -287,7 +296,7 @@ export default function CadastroPedido() {
                 });
                 return;
             }
-            if (valorTotalPagamentos > valorTotalPedido) {
+            if (valorTotalPagamentos > valorTotalPedido + discount) {
                 toast({
                     variant: "destructive",
                     title: "Erro no pagamento",
@@ -534,15 +543,7 @@ export default function CadastroPedido() {
                                     Total de Itens: {items.length}
                                 </TableCell>
                                 <TableCell className='text-right' colSpan={3}>
-                                    Valor Total: R$ {calcularValorTotalPedido().toFixed(2).replace('.', ',')}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className='text-left' colSpan={3}>
-                                    Desconto: R$ {discount.toFixed(2).replace('.', ',')}
-                                </TableCell>
-                                <TableCell className='text-right' colSpan={3}>
-                                    Valor Total com Desconto: R$ {(calcularValorTotalPedido()).toFixed(2).replace('.', ',')}
+                                    Subtotal: R$ {calcularSubtotal().toFixed(2).replace('.', ',')}
                                 </TableCell>
                             </TableRow>
                         </TableFooter>
@@ -668,8 +669,8 @@ export default function CadastroPedido() {
                         />
                     </div>
                     <div className="mt-4">
-                        <p>Total do Pedido: R$ {calcularValorTotalPedido().toFixed(2).replace('.', ',')}</p>
-                        <p>Total com Desconto: R$ {(calcularValorTotalPedido()).toFixed(2).replace('.', ',')}</p>
+                        <p>Subtotal: R$ {calcularSubtotal().toFixed(2).replace('.', ',')}</p>
+                        <p>Total: R$ {calcularTotal().toFixed(2).replace('.', ',')}</p>
                     </div>
                 </section>
                 <div className='flex flex-col md:flex-row gap-4 mt-4'>

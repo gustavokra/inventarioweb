@@ -132,7 +132,7 @@ export default function SupplierList() {
                 </div>
 
                 {/* Filters */}
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                     <div className='space-y-2'>
                         <label htmlFor='name-filter' className='text-sm font-medium text-gray-700'>
                             Filtrar por Nome
@@ -159,18 +159,6 @@ export default function SupplierList() {
                             className='w-full'
                         />
                     </div>
-                    <div className='space-y-2'>
-                        <label className='text-sm font-medium text-gray-700'>
-                            Ordenar por Nome
-                        </label>
-                        <Button 
-                            onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}
-                            variant='outline'
-                            className='w-full'
-                        >
-                            Nome {nameSortOrder === 'asc' ? '↑' : '↓'}
-                        </Button>
-                    </div>
                 </div>
 
                 {/* Table */}
@@ -179,7 +167,12 @@ export default function SupplierList() {
                         <TableCaption>Lista de fornecedores cadastrados</TableCaption>
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
-                                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Nome</TableHead>
+                                <TableHead 
+                                    className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
+                                    onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}
+                                >
+                                    Nome {nameSortOrder === 'asc' ? '↑' : '↓'}
+                                </TableHead>
                                 <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>CPF/CNPJ</TableHead>
                                 <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Contato</TableHead>
                                 <TableHead className='w-3/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Endereço</TableHead>

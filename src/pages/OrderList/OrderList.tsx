@@ -2,7 +2,7 @@ import { IOrder } from '@/@types/IOrder';
 import { StatusLabel } from '@/components/StatusLabel';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useOrder } from '@/context/OrderContext';
 import { useToast } from '@/hooks/use-toast';
 import FormatDate from '@/util/FormatDate';
@@ -22,6 +22,8 @@ export default function OrderList() {
     const { setOrder } = useOrder();
     const navigate = useNavigate();
     const [dateOrder, setDateOrder] = useState<'asc' | 'desc'>('desc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [ordersPerPage, setOrdersPerPage] = useState(10);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -102,6 +104,15 @@ export default function OrderList() {
         }
     };
 
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleOrdersPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setOrdersPerPage(Number(event.target.value));
+        setCurrentPage(1);
+    };
+
     const filteredOrders = orders.filter(order => {
         const formattedDate = order.createdAt || '';
         const hasMatchingProduct = order.items?.some(item =>
@@ -119,6 +130,21 @@ export default function OrderList() {
         const dateB = new Date(b.createdAt || '').getTime();
         return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
+
+    const paginatedOrders = filteredOrders.slice(
+        (currentPage - 1) * ordersPerPage,
+        currentPage * ordersPerPage
+    );
+
+    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
+    const getPageNumbers = () => {
+        const maxPagesToShow = 10;
+        const startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+    };
 
     return (
         <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -188,6 +214,22 @@ export default function OrderList() {
                             className='w-full'
                         />
                     </div>
+                    <div className='space-y-2'>
+                        <label htmlFor='orders-per-page' className='text-sm font-medium text-gray-700'>
+                            Pedidos por página
+                        </label>
+                        <select
+                            id='orders-per-page'
+                            value={ordersPerPage}
+                            onChange={handleOrdersPerPageChange}
+                            className='w-full border border-gray-300 rounded-md p-2'
+                        >
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -213,7 +255,7 @@ export default function OrderList() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredOrders.map((order) => (
+                            {paginatedOrders.map((order) => (
                                 <React.Fragment key={order.id}>
                                     <TableRow 
                                         className='hover:bg-gray-50 transition-colors cursor-pointer'
@@ -343,6 +385,28 @@ export default function OrderList() {
                                 </React.Fragment>
                             ))}
                         </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TableCell colSpan={10} className='py-3 px-4'>
+                                    <div className='flex justify-between items-center'>
+                                        <span className='text-sm font-medium'>
+                                            Total de Pedidos: {filteredOrders.length}
+                                        </span>
+                                        <div className='flex items-center space-x-2'>
+                                            {getPageNumbers().map((pageNumber) => (
+                                                <Button
+                                                    key={pageNumber}
+                                                    onClick={() => handlePageChange(pageNumber)}
+                                                    className={`px-3 py-1 text-xs border rounded-md ${currentPage === pageNumber ? 'bg-gray-300 text-gray-900' : 'bg-white text-gray-700'}`}
+                                                >
+                                                    {pageNumber}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        </TableFooter>
                     </Table>
                 </div>
             </div>

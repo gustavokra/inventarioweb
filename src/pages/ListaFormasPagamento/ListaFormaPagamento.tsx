@@ -10,6 +10,7 @@ export default function ListaFormaPagamento() {
     const { toast } = useToast();
     const [formasPagamento, setFormasPagamento] = useState<IFormaPagamento[]>([]);
     const [reload, setReload] = useState(false);
+    const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
     const { setFormaPagamento } = useFormaPagamento();
     const navigate = useNavigate();
 
@@ -44,6 +45,19 @@ export default function ListaFormaPagamento() {
         fetchData();
     }, [reload]);
 
+    const sortFormasPagamentoByName = (order: 'asc' | 'desc') => {
+        const sortedFormasPagamento = [...formasPagamento].sort((a, b) => {
+            if (order === 'asc') {
+                return a.nome.localeCompare(b.nome);
+            } else {
+                return b.nome.localeCompare(a.nome);
+            }
+        });
+        return sortedFormasPagamento;
+    };
+
+    const sortedFormasPagamento = sortFormasPagamentoByName(nameSortOrder);
+
     const handleCadaster = () => {
         navigate('/forma-pagamento/cadaster');
     };
@@ -73,13 +87,18 @@ export default function ListaFormaPagamento() {
                         <TableCaption>Lista de formas de pagamento</TableCaption>
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
-                                <TableHead className='w-6/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Nome</TableHead>
+                                <TableHead 
+                                    className='w-6/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
+                                    onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}
+                                >
+                                    Nome {nameSortOrder === 'asc' ? '↑' : '↓'}
+                                </TableHead>
                                 <TableHead className='w-4/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Número Máximo de Parcelas</TableHead>
                                 <TableHead className='w-2/12 text-center py-3 px-4 text-sm font-medium text-gray-900'>Ações</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {formasPagamento.map((formaPagamento) => (
+                            {sortedFormasPagamento.map((formaPagamento) => (
                                 <TableRow key={formaPagamento.id} className='hover:bg-gray-50 transition-colors'>
                                     <TableCell className='py-3 px-4'>{formaPagamento.nome}</TableCell>
                                     <TableCell className='py-3 px-4'>{formaPagamento.numeroMaxParcelas}</TableCell>

@@ -16,6 +16,7 @@ export default function ClientList() {
   const [reload, setReload] = useState(false);
   const { setClient } = useClient();
   const navigate = useNavigate();
+  const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +102,19 @@ export default function ClientList() {
     client.document.includes(documentFilter)
   );
 
+  const sortClientsByName = (order: 'asc' | 'desc') => {
+    const sortedClients = [...filteredClients].sort((a, b) => {
+        if (order === 'asc') {
+            return a.name.localeCompare(b.name);
+        } else {
+            return b.name.localeCompare(a.name);
+        }
+    });
+    return sortedClients;
+  };
+
+  const sortedClients = sortClientsByName(nameSortOrder);
+
   return (
     <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
       <div className='bg-white rounded-lg shadow-md p-6 space-y-6'>
@@ -151,7 +165,12 @@ export default function ClientList() {
             <TableCaption>Lista de clientes cadastrados</TableCaption>
             <TableHeader>
               <TableRow className='bg-gray-50'>
-                <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Nome</TableHead>
+                <TableHead 
+                  className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
+                  onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}
+                >
+                  Nome {nameSortOrder === 'asc' ? '↑' : '↓'}
+                </TableHead>
                 <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>CPF/CNPJ</TableHead>
                 <TableHead className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Contato</TableHead>
                 <TableHead className='w-3/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Endereço</TableHead>
@@ -161,7 +180,7 @@ export default function ClientList() {
             </TableHeader>
 
             <TableBody>
-              {filteredClients.map((client) => (
+              {sortedClients.map((client) => (
                 <TableRow 
                   key={client.document}
                   className='hover:bg-gray-50 transition-colors'
