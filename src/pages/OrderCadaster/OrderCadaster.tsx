@@ -64,7 +64,6 @@ export default function CadastroPedido() {
             const quantidade = item.quantity || 0;
             return total + (preco * quantidade);
         }, 0);
-        console.log(subtotal)
         return subtotal;
     }
 
@@ -171,7 +170,7 @@ export default function CadastroPedido() {
     // Funções de API
     const buscarClientes = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/client', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -202,7 +201,7 @@ export default function CadastroPedido() {
 
     const buscarProdutos = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/product', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,7 +221,6 @@ export default function CadastroPedido() {
             }
 
             const produtos = await response.json();
-            console.log('Produtos recebidos:', produtos);
             setProducts(produtos);
         } catch (err: unknown) {
             toast({
@@ -235,7 +233,7 @@ export default function CadastroPedido() {
 
     const buscarFormasPagamento = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/forma-pagamento', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,10 +278,6 @@ export default function CadastroPedido() {
         const valorTotalPedido = calcularTotal();
         const valorTotalPagamentos = pagamentos.reduce((acc, curr) => acc + (curr.valorParcelas || 0), 0);
 
-        // Verificando se os valores são iguais (com margem de erro de 0.01 para evitar problemas com decimais)
-        console.log((valorTotalPedido + discount))
-        console.log(valorTotalPagamentos)
-
         if ((valorTotalPedido + discount) - valorTotalPagamentos > 0.01) {
             if (valorTotalPagamentos < valorTotalPedido + discount) {
                 toast({
@@ -323,7 +317,7 @@ export default function CadastroPedido() {
 
     const cadastrarPedido = async (dadosPedido: IOrder) => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/order', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -360,7 +354,7 @@ export default function CadastroPedido() {
 
     const atualizarPedido = async (dadosPedido: IOrder) => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/order', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/order', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -398,7 +392,7 @@ export default function CadastroPedido() {
 
     const excluirPedido = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/order', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/order', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

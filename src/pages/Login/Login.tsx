@@ -20,7 +20,7 @@ export default function Login() {
             password,
         };
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/auth/login', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ export default function Login() {
             }
 
             const data = await response.json();
-            console.log('Usuário logado com sucesso:', data);
             localStorage.setItem('token', data.token);
             localStorage.setItem('admin', data.admin);
             localStorage.setItem('userId', data.userId);

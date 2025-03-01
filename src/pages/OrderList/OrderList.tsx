@@ -28,7 +28,7 @@ export default function OrderList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://35.198.61.242:8080/api/v1/order', {
+                const response = await fetch('http://127.0.0.1:8080/api/v1/order', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export default function OrderList() {
     const handleCompleteOrder = async (order: IOrder) => {
         try {
             const updatedOrder = { ...order, enumStatus: 'COMPLETED' };
-            const response = await fetch(`https://35.198.61.242:8080/api/v1/order/`, {
+            const response = await fetch(`http://127.0.0.1:8080/api/v1/order/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

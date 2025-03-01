@@ -25,7 +25,7 @@ export default function ListaCaixa() {
 
     const fetchOperacoes = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/operacao-caixa', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/operacao-caixa', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +45,6 @@ export default function ListaCaixa() {
             }
 
             const data = await response.json();
-            console.log(data);
             setOperacoes(data);
         } catch (err) {
             toast({

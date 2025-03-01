@@ -26,7 +26,7 @@ const FileUploadButton = () => {
             const jsonData = XLSX.utils.sheet_to_json(sheet);
 
             try {
-                const response = await fetch('https://35.198.61.242:8080/api/v1/product/import', {
+                const response = await fetch('http://127.0.0.1:8080/api/v1/product/import', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

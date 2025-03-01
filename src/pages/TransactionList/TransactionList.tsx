@@ -15,7 +15,7 @@ export default function TransactionList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://35.198.61.242:8080/api/v1/transaction', {
+                const response = await fetch('http://127.0.0.1:8080/api/v1/transaction', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -29,7 +29,6 @@ export default function TransactionList() {
                 }
                 setTransactions(await response.json());
             } catch (err: unknown) {
-                console.log(err);
             }
         };
 

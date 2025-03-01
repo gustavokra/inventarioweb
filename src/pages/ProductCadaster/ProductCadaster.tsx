@@ -38,7 +38,7 @@ export default function ProductCadaster() {
 
     const fetchSuppliers = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/supplier', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export default function ProductCadaster() {
 
     const fetchMarcas = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/marca', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export default function ProductCadaster() {
 
     const fetchGrupos = async () => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/grupo', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ export default function ProductCadaster() {
 
     const registerProduct = async (prodcutDataToRegister: IProduct) => {
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/product', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,9 +208,8 @@ export default function ProductCadaster() {
     }
 
     const updateProduct = async (prodcutDataToUpdate: IProduct) => {
-        console.log({ prodcutDataToUpdate })
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/product', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -242,7 +241,7 @@ export default function ProductCadaster() {
     const deleteProduct = async () => {
 
         try {
-            const response = await fetch('https://35.198.61.242:8080/api/v1/product', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -283,7 +282,7 @@ export default function ProductCadaster() {
                 nome: novoGrupo
             }
 
-            const response = await fetch('https://35.198.61.242:8080/api/v1/grupo', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -299,7 +298,6 @@ export default function ProductCadaster() {
 
             fetchGrupos()
         } catch (err: unknown) {
-            console.log(err);
         }
     }
 
@@ -316,7 +314,7 @@ export default function ProductCadaster() {
                 nome: novaMarca
             }
 
-            const response = await fetch('https://35.198.61.242:8080/api/v1/marca', {
+            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -326,7 +324,6 @@ export default function ProductCadaster() {
                 body: JSON.stringify(novaMarcaCriar),
             });
 
-            console.log(response)
 
             if (!response.ok) {
                 throw new Error("Erro ao criar marca");
@@ -334,7 +331,6 @@ export default function ProductCadaster() {
 
             fetchMarcas()
         } catch (err: unknown) {
-            console.log(err);
         }
     }
 
