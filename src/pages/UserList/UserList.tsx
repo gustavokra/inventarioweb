@@ -22,7 +22,7 @@ export default function UserList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
+                const response = await fetch('http://35.198.61.242:8080/api/v1/user', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function UserList() {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/user', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

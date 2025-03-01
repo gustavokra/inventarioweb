@@ -21,7 +21,7 @@ export default function ClientList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+        const response = await fetch('http://35.198.61.242:8080/api/v1/client', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default function ClientList() {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+      const response = await fetch('http://35.198.61.242:8080/api/v1/client', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

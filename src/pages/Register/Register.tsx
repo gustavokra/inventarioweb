@@ -27,7 +27,7 @@ export default function Register() {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

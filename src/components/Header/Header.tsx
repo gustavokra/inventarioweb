@@ -24,7 +24,7 @@ export default function Header() {
 
     const downloadBackup = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/backup', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/backup', {
                 method: 'GET',
                 headers: {
                     'dbImpl': 'SQLITE',

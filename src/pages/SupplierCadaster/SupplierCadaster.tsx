@@ -55,7 +55,7 @@ export default function SupplierCadaster() {
 
     const registerSupplier = async (supplierDataToRegister: ISupplier) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function SupplierCadaster() {
     const updateSupplier = async (supplierDataToUpdate: ISupplier) => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export default function SupplierCadaster() {
     const deleteSupplier = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
