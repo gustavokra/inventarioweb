@@ -58,7 +58,7 @@ export default function PDV() {
 
     const fetchClientes = async () => {
         try {
-            const response = await fetch('http://35.198.61.242:8080/api/v1/client', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/client', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export default function PDV() {
 
     const fetchProdutos = async () => {
         try {
-            const response = await fetch('http://35.198.61.242:8080/api/v1/product', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/product', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ export default function PDV() {
 
     const fetchFormasPagamento = async () => {
         try {
-            const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/forma-pagamento', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export default function PDV() {
 
     const fetchOperacoes = async () => {
         try {
-            const response = await fetch('http://35.198.61.242:8080/api/v1/operacao-caixa', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/operacao-caixa', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -313,7 +313,7 @@ export default function PDV() {
         };
 
         try {
-            const response = await fetch('http://35.198.61.242:8080/api/v1/order', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
