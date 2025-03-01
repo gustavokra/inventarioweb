@@ -5,12 +5,10 @@ import { Label } from '@radix-ui/react-label';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
-import { useToast } from '@/hooks/use-toast';
 
 
 export default function Register() {
     const navigate = useNavigate();
-    const [message, setMessage] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,7 +27,7 @@ export default function Register() {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/user', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,11 +38,9 @@ export default function Register() {
 
             if (!response.ok) {
                 console.log(response.status)
-                setMessage('Erro ao cadastrar usuário')
                 throw new Error(`Erro: ${response.status}`);
             }
 
-            setMessage('Usuário cadastrado com sucesso:')
             navigate('/login');
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);

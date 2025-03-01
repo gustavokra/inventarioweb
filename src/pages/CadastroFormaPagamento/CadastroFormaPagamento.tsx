@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function CadastroFormaPagamento() {
     const { toast } = useToast();
-    const [id, setId] = useState(0);
     const [nome, setNome] = useState('');
     const [numeroMaxParcelas, setNumeroMaxParcelas] = useState(1);
     const admin = localStorage.getItem('admin') === 'true';
@@ -24,7 +23,6 @@ export default function CadastroFormaPagamento() {
 
     useEffect(() => {
         if (formaPagamento) {
-            setId(formaPagamento.id ? formaPagamento.id : 0)
             setNome(formaPagamento.nome);
             setNumeroMaxParcelas(formaPagamento.numeroMaxParcelas);
         }
@@ -43,7 +41,7 @@ export default function CadastroFormaPagamento() {
 
     const registerFormaPagamento = async (formaPagamentoDataToRegister: IFormaPagamento) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +71,7 @@ export default function CadastroFormaPagamento() {
 
     const updateFormaPagamento = async (formaPagamentoDataToUpdate: IFormaPagamento) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +102,7 @@ export default function CadastroFormaPagamento() {
 
     const deleteFormaPagamento = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

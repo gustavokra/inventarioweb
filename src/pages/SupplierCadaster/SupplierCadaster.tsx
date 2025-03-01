@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SupplierCadaster() {
     const { toast } = useToast();
-    const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [document, setDocument] = useState('');
     const [contact, setContact] = useState('');
@@ -26,7 +25,6 @@ export default function SupplierCadaster() {
 
     useEffect(() => {
         if (supplier) {
-            setId(supplier.id ? supplier.id : 0)
             setName(supplier.name);
             setDocument(supplier.document);
             setContact(supplier.contact);
@@ -57,7 +55,7 @@ export default function SupplierCadaster() {
 
     const registerSupplier = async (supplierDataToRegister: ISupplier) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +86,7 @@ export default function SupplierCadaster() {
     const updateSupplier = async (supplierDataToUpdate: ISupplier) => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,7 +117,7 @@ export default function SupplierCadaster() {
     const deleteSupplier = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

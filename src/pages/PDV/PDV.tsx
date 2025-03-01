@@ -1,7 +1,7 @@
 import { IOperacaoCaixa } from '@/@types/ICaixa';
 import { IClient } from '@/@types/IClient';
 import { IFormaPagamento } from '@/@types/IFormaPagamento';
-import { IItemPDV, IVendaPDV } from '@/@types/IPDV';
+import { IItemPDV } from '@/@types/IPDV';
 import { IProduct } from '@/@types/IProduct';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,6 @@ import { Label } from '@/components/ui/label';
 
 export default function PDV() {
     const { toast } = useToast();
-    const [quantidade, setQuantidade] = useState(1);
     const [itens, setItens] = useState<IItemPDV[]>([]);
     const [subtotal, setSubtotal] = useState(0);
     const [desconto, setDesconto] = useState(0);
@@ -28,7 +27,6 @@ export default function PDV() {
         numeroParcelas: number;
         valor: number;
     }[]>([]);
-    const [valorPagamentoAtual, setValorPagamentoAtual] = useState<number>(0);
     const [valorRestante, setValorRestante] = useState<number>(0);
     const [produtos, setProdutos] = useState<IProduct[]>([]);
     const [produtosSelecionados, setProdutosSelecionados] = useState<IProduct[]>([]);
@@ -56,12 +54,11 @@ export default function PDV() {
     useEffect(() => {
         const valorTotalPago = pagamentosSelecionados.reduce((acc, pag) => acc + pag.valor, 0);
         setValorRestante(total - valorTotalPago);
-        setValorPagamentoAtual(total - valorTotalPago);
     }, [total, pagamentosSelecionados]);
 
     const fetchClientes = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/client', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/client', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +90,7 @@ export default function PDV() {
 
     const fetchProdutos = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/product', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +122,7 @@ export default function PDV() {
 
     const fetchFormasPagamento = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -157,7 +154,7 @@ export default function PDV() {
 
     const fetchOperacoes = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/operacao-caixa', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/operacao-caixa', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -316,7 +313,7 @@ export default function PDV() {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/order', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -350,7 +347,6 @@ export default function PDV() {
             setTotal(0);
             setSubtotal(0);
             setValorRestante(0);
-            setValorPagamentoAtual(0);
 
         } catch (err) {
             toast({

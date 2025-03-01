@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCaixa } from '@/context/CaixaContext';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Caixa() {
@@ -81,7 +81,7 @@ export default function Caixa() {
                 totalMovimentado: Number(parseFloat(saldoInicial).toFixed(2)) - Number(parseFloat(saldoFinal).toFixed(2))
             };
 
-            const response = await fetch('http://127.0.0.1:8080/api/v1/operacao-caixa', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/operacao-caixa', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,8 +101,7 @@ export default function Caixa() {
                 });
                 return;
             }
-
-            const caixaFechado: IOperacaoCaixa = await response.json();
+            
             setOperacaoAtual(null);
             navigate('/lista-caixa');
             toast({

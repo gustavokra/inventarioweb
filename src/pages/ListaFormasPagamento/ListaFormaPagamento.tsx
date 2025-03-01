@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 export default function ListaFormaPagamento() {
     const { toast } = useToast();
     const [formasPagamento, setFormasPagamento] = useState<IFormaPagamento[]>([]);
-    const [reload, setReload] = useState(false);
     const [nameSortOrder, setNameSortOrder] = useState<'asc' | 'desc'>('asc');
     const { setFormaPagamento } = useFormaPagamento();
     const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function ListaFormaPagamento() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:8080/api/v1/forma-pagamento', {
+                const response = await fetch('http://35.198.61.242:8080/api/v1/forma-pagamento', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -43,7 +42,7 @@ export default function ListaFormaPagamento() {
         };
 
         fetchData();
-    }, [reload]);
+    },);
 
     const sortFormasPagamentoByName = (order: 'asc' | 'desc') => {
         const sortedFormasPagamento = [...formasPagamento].sort((a, b) => {

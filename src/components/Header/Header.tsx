@@ -22,6 +22,32 @@ export default function Header() {
         navigate('/login');
     };
 
+    const downloadBackup = async () => {
+        try {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/backup', {
+                method: 'GET',
+                headers: {
+                    'dbImpl': 'SQLITE',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'backup.sqlite';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                console.error('Failed to download backup');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <header className='bg-[var(--color-primary)] shadow-md'>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -107,14 +133,21 @@ export default function Header() {
                     )}
 
                     {/* Logout Button or Empty div for spacing */}
-                    <div className='hidden md:flex items-center'>
+                    <div className='hidden md:flex items-center space-x-4'>
                         {isAuthenticated && (
-                            <Button
-                                onClick={logout}
-                                className='bg-white text-[var(--color-primary)] hover:bg-[var(--color-gray-100)] hover:text-[var(--color-primary-dark)] transition-colors'
-                            >
-                                Logout
-                            </Button>
+                            <>
+                                <Button
+                                    onClick={downloadBackup}
+                                    className='bg-white text-[var(--color-primary)] hover:bg-[var(--color-gray-100)] hover:text-[var(--color-primary-dark)] transition-colors'
+                                >
+                                    Download Backup
+                                </Button>
+                                <Button
+                                    onClick={logout}
+                                    variant={'destructive'}>
+                                    Logout
+                                </Button>
+                            </>
                         )}
                     </div>
 
@@ -195,6 +228,15 @@ export default function Header() {
                                     >
                                         Transações
                                     </Link> */}
+                                    <Button
+                                        onClick={() => {
+                                            downloadBackup();
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className='bg-white text-[var(--color-primary)] hover:bg-[var(--color-gray-100)] hover:text-[var(--color-primary-dark)] transition-colors w-full'
+                                    >
+                                        Download Backup
+                                    </Button>
                                     <Button
                                         onClick={() => {
                                             logout();

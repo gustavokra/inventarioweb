@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProductCadaster() {
     const { toast } = useToast();
-    const [id, setId] = useState(0);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [costPrice, setCostPrice] = useState<number>(0);
@@ -39,7 +38,7 @@ export default function ProductCadaster() {
 
     const fetchSuppliers = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/supplier', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/supplier', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +64,7 @@ export default function ProductCadaster() {
 
     const fetchMarcas = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/marca', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +90,7 @@ export default function ProductCadaster() {
 
     const fetchGrupos = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/grupo', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,7 +121,6 @@ export default function ProductCadaster() {
         fetchGrupos()
 
         if (product) {
-            setId(product.id ? product.id : 0)
             setName(product.name)
             setDescription(product.description)
             setCostPrice(product.costPrice)
@@ -180,7 +178,7 @@ export default function ProductCadaster() {
 
     const registerProduct = async (prodcutDataToRegister: IProduct) => {
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/product', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -212,7 +210,7 @@ export default function ProductCadaster() {
     const updateProduct = async (prodcutDataToUpdate: IProduct) => {
         console.log({ prodcutDataToUpdate })
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/product', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -244,7 +242,7 @@ export default function ProductCadaster() {
     const deleteProduct = async () => {
 
         try {
-            const response = await fetch('http://127.0.0.1:8080/api/v1/product', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/product', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -285,7 +283,7 @@ export default function ProductCadaster() {
                 nome: novoGrupo
             }
 
-            const response = await fetch('http://127.0.0.1:8080/api/v1/grupo', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/grupo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -318,7 +316,7 @@ export default function ProductCadaster() {
                 nome: novaMarca
             }
 
-            const response = await fetch('http://127.0.0.1:8080/api/v1/marca', {
+            const response = await fetch('http://35.198.61.242:8080/api/v1/marca', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
