@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import '@/styles/utility.css';
 import './Login.css';
-import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Login() {
+    const { toast } = useToast();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,7 +22,7 @@ export default function Login() {
             password,
         };
         try {
-            const response = await fetch('https://35.198.61.242:8443/api/v1/auth/login', {
+            const response = await fetch('https://localhost:8443/api/v1/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,13 +32,23 @@ export default function Login() {
             });
 
             if (!response.ok) {
-                throw new Error(`Erro: ${response.status}`);
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao logar. Tente novamente",
+                    description: errorData.details || JSON.stringify(errorData),
+                });
+                return;
             }
 
             const data = await response.json();
             localStorage.setItem('token', data.token);
             localStorage.setItem('admin', data.admin);
             localStorage.setItem('userId', data.userId);
+            toast({
+                title: "Sucesso",
+                description: "Logado com uscesso",
+            });
             navigate('/clients');
         } catch (error) {
             console.error('Erro ao logar usuário:', error);
