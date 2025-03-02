@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
 import { EnumPaginas } from '@/@types/EnumPaginas';
-import LogoIcon from '@/assets/logo_icon.png';
 import Amburger from '@/assets/amburguer_icon.svg';
 import Close from '@/assets/close_icon.svg';
+import LogoIcon from '@/assets/logo_icon.png';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
 
 export default function Header() {
+    const { toast } = useToast();
     const navigate = useNavigate();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,7 +43,13 @@ export default function Header() {
                 a.click();
                 a.remove();
             } else {
-                console.error('Failed to download backup');
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao logar. Tente novamente",
+                    description: errorData.details || JSON.stringify(errorData),
+                });
+                return;
             }
         } catch (error) {
             console.error('Error:', error);
