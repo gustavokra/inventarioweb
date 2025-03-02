@@ -170,7 +170,7 @@ export default function CadastroPedido() {
     // Funções de API
     const buscarClientes = async () => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/client', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/client', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -201,7 +201,7 @@ export default function CadastroPedido() {
 
     const buscarProdutos = async () => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/product', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/product', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ export default function CadastroPedido() {
 
     const buscarFormasPagamento = async () => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/forma-pagamento', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/forma-pagamento', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -317,7 +317,7 @@ export default function CadastroPedido() {
 
     const cadastrarPedido = async (dadosPedido: IOrder) => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/order', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -354,7 +354,7 @@ export default function CadastroPedido() {
 
     const atualizarPedido = async (dadosPedido: IOrder) => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/order', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/order', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -392,7 +392,7 @@ export default function CadastroPedido() {
 
     const excluirPedido = async () => {
         try {
-            const response = await fetch(' http://35.198.61.242:8443/api/v1/order', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/order', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
