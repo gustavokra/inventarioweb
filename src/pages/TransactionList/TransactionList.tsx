@@ -15,7 +15,7 @@ export default function TransactionList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://localhost:8443/api/v1/transaction', {
+                const response = await fetch('https://35.198.61.242:8443/api/v1/transaction', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

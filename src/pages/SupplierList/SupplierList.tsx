@@ -22,7 +22,7 @@ export default function SupplierList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://localhost:8443/api/v1/supplier', {
+                const response = await fetch('https://35.198.61.242:8443/api/v1/supplier', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function SupplierList() {
         }
 
         try {
-            const response = await fetch('https://localhost:8443/api/v1/supplier', {
+            const response = await fetch('https://35.198.61.242:8443/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
