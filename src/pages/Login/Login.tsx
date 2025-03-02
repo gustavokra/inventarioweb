@@ -22,7 +22,7 @@ export default function Login() {
             password,
         };
         try {
-            const response = await fetch('https://35.198.61.242:8443/api/v1/auth/login', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
