@@ -63,6 +63,7 @@ export default function PDV() {
                 headers: {
                     'Content-Type': 'application/json',
                     'dbImpl': 'SQLITE',
+                    'Access-Control-Allow-Origin' : "true",
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             });
