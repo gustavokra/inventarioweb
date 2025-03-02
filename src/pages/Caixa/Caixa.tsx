@@ -99,7 +99,7 @@ export default function Caixa() {
                     title: "Erro ao fechar caixa",
                     description: errorData.details,
                 });
-                return;
+                return
             }
 
             setOperacaoAtual(null);
