@@ -22,7 +22,7 @@ export default function Login() {
             password,
         };
         try {
-            const response = await fetch('https://35.198.61.242:8443/api/v1/auth/login', {
+            const response = await fetch(' https://35.198.61.242:8443/api/v1/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export default function Login() {
                 },
                 body: JSON.stringify(userData),
             });
-
+            console.log("chega aqui?")
             if (!response.ok) {
                 const errorData = await response.json();
                 toast({
@@ -51,7 +51,10 @@ export default function Login() {
             });
             navigate('/clients');
         } catch (error) {
-            console.error('Erro ao logar usuário:', error);
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado"
+            });
         }
     }
 
