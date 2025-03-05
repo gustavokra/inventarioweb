@@ -26,7 +26,7 @@ const FileUploadButton = () => {
             const jsonData = XLSX.utils.sheet_to_json(sheet);
 
             try {
-                const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/product/import', {
+                const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/product/import', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

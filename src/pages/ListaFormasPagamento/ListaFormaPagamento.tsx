@@ -16,7 +16,7 @@ export default function ListaFormaPagamento() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/forma-pagamento', {
+                const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/forma-pagamento', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
