@@ -25,7 +25,7 @@ export default function ListaCaixa() {
 
     const fetchOperacoes = async () => {
         try {
-            const response = await fetch(' https://35.198.61.242:8443/api/v1/operacao-caixa', {
+            const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/operacao-caixa', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,6 @@ export default function ListaCaixa() {
                     <h1 className="text-2xl font-bold">Operações de Caixa</h1>
                     <Button 
                         onClick={handleCaixaClick}
-                        className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
                     >
                         {caixaAberto ? 'Fechar Caixa' : 'Abrir Caixa'}
                     </Button>

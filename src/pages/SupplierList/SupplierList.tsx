@@ -22,7 +22,7 @@ export default function SupplierList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(' https://35.198.61.242:8443/api/v1/supplier', {
+                const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/supplier', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export default function SupplierList() {
         }
 
         try {
-            const response = await fetch(' https://35.198.61.242:8443/api/v1/supplier', {
+            const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,6 @@ export default function SupplierList() {
                     {admin && (
                         <Button 
                             onClick={handleCadaster}
-                            className='bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors'
                         >
                             Cadastrar Fornecedor
                         </Button>
@@ -183,7 +182,7 @@ export default function SupplierList() {
                         <TableBody>
                             {sortedSuppliers.map((supplier) => (
                                 <TableRow 
-                                    key={supplier.document}
+                                    key={supplier.id}
                                     className='hover:bg-gray-50 transition-colors'
                                 >
                                     <TableCell className='py-3 px-4'>{supplier.name}</TableCell>

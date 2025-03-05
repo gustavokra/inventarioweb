@@ -24,7 +24,7 @@ export default function Caixa() {
                 usuarioId: Number(localStorage.getItem('userId'))
             };
 
-            const response = await fetch('http://localhost:8080/api/v1/operacao-caixa', {
+            const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/operacao-caixa', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function Caixa() {
                 totalMovimentado: Number(parseFloat(saldoInicial).toFixed(2)) - Number(parseFloat(saldoFinal).toFixed(2))
             };
 
-            const response = await fetch(' https://35.198.61.242:8443/api/v1/operacao-caixa', {
+            const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/operacao-caixa', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,7 +162,6 @@ export default function Caixa() {
                             />
                         </div>
                         <Button
-                            className="w-full bg-zinc-900 hover:bg-zinc-800 text-white"
                             onClick={handleAbrirCaixa}
                             disabled={!saldoInicial}
                         >

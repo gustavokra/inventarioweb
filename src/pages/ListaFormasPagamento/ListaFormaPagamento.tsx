@@ -16,7 +16,7 @@ export default function ListaFormaPagamento() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(' https://35.198.61.242:8443/api/v1/forma-pagamento', {
+                const response = await fetch('https://inventarioweb-seven.vercel.app/api/v1/forma-pagamento', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +74,6 @@ export default function ListaFormaPagamento() {
                     <h1 className='text-2xl font-bold text-gray-900'>Formas de Pagamento</h1>
                     <Button 
                         onClick={handleCadaster}
-                        className='bg-zinc-900 hover:bg-zinc-800 text-white transition-colors'
                     >
                         Cadastrar Forma de Pagamento
                     </Button>
