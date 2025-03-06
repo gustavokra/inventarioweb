@@ -55,12 +55,12 @@ export default function ProductList() {
     }, [reload]);
 
     const handleCadaster = () => {
-        navigate('/products/cadaster');
+        navigate('/produtos/cadastro');
     };
 
     const handleEdit = (product: IProduct) => {
         setProduct(product);
-        navigate('/products/cadaster');
+        navigate('/produtos/cadastro');
     }
 
     const handleChangeStatus = async (product: IProduct) => {

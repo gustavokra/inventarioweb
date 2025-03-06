@@ -49,12 +49,12 @@ export default function ClientList() {
   }, [reload]);
 
   const handleCadaster = () => {
-    navigate('/clients/cadaster');
+    navigate('/clientes/cadastro');
   };
 
   const handleEdit = (client: IClient) => {
     setClient(client);
-    navigate('/clients/cadaster');
+    navigate('/clientes/cadastro');
   }
 
   const handleChangeStatus = async (client: IClient) => {
@@ -181,7 +181,7 @@ export default function ClientList() {
             <TableBody>
               {sortedClients.map((client) => (
                 <TableRow 
-                  key={client.document}
+                  key={client.id}
                   className='hover:bg-gray-50 transition-colors'
                 >
                   <TableCell className='py-3 px-4'>{client.name}</TableCell>

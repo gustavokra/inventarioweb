@@ -35,7 +35,7 @@ export default function ListaFormaPagamento() {
                     return;
                 }
                 setFormasPagamento(await response.json());
-                
+
             } catch (err: unknown) {
                 toast({ variant: "destructive", title: "Erro inesperado", description: "Ocorreu um erro ao trazer dados." });
             }
@@ -58,12 +58,12 @@ export default function ListaFormaPagamento() {
     const sortedFormasPagamento = sortFormasPagamentoByName(nameSortOrder);
 
     const handleCadaster = () => {
-        navigate('/forma-pagamento/cadaster');
+        navigate('/formas-pagamento/cadastro');
     };
 
     const handleEdit = (formaPagamento: IFormaPagamento) => {
         setFormaPagamento(formaPagamento);
-        navigate('/forma-pagamento/cadaster');
+        navigate('/formas-pagamento/cadastro');
     }
 
     return (
@@ -72,7 +72,7 @@ export default function ListaFormaPagamento() {
                 {/* Header */}
                 <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
                     <h1 className='text-2xl font-bold text-gray-900'>Formas de Pagamento</h1>
-                    <Button 
+                    <Button
                         onClick={handleCadaster}
                     >
                         Cadastrar Forma de Pagamento
@@ -85,7 +85,7 @@ export default function ListaFormaPagamento() {
                         <TableCaption>Lista de formas de pagamento</TableCaption>
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
-                                <TableHead 
+                                <TableHead
                                     className='w-6/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
                                     onClick={() => setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc')}
                                 >
@@ -102,10 +102,10 @@ export default function ListaFormaPagamento() {
                                     <TableCell className='py-3 px-4'>{formaPagamento.numeroMaxParcelas}</TableCell>
                                     <TableCell className='py-3 px-4'>
                                         <div className='flex justify-center'>
-                                            <Button 
-                                                variant="outline" 
+                                            <Button
+                                                variant="outline"
                                                 onClick={() => handleEdit(formaPagamento)}
-                                                className='border-green-600 text-green-700 hover:bg-green-600 hover:text-white transition-colors'
+                                                className='px-3 py-1 text-xs text-gray-900 hover:text-gray-900 border-gray-200'
                                             >
                                                 Editar
                                             </Button>

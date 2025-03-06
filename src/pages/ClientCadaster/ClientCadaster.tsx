@@ -21,7 +21,7 @@ export default function ClientCadaster() {
 
     const returnToList = () => {
         setClient(null)
-        navigate('/clients')
+        navigate('/clientes')
     }
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function ClientCadaster() {
 
     const handleExecuteSucessSubmit = () => {
         setClient(null);
-        navigate('/clients');
+        navigate('/clientes');
     };
 
     const registerClient = async (clientDataToRegister: IClient, toast: any) => {

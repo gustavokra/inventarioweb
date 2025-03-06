@@ -164,7 +164,7 @@ export default function CadastroPedido() {
     // Funções de Navegação
     const voltarParaLista = () => {
         setOrder(null)
-        navigate('/orders')
+        navigate('/pedidos')
     }
 
     // Funções de API
@@ -312,7 +312,7 @@ export default function CadastroPedido() {
 
     const finalizarSubmissao = () => {
         setOrder(null);
-        navigate('/orders');
+        navigate('/pedidos');
     }
 
     const cadastrarPedido = async (dadosPedido: IOrder) => {

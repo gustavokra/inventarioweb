@@ -20,7 +20,7 @@ export default function SupplierCadaster() {
 
     const returnToList = () => {
         setSupplier(null)
-        navigate('/suppliers')
+        navigate('/fornecedores')
     }
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function SupplierCadaster() {
 
     const handleExecuteSucessSubmit = () => {
         setSupplier(null);
-        navigate('/suppliers');
+        navigate('/fornecedores');
     };
 
 

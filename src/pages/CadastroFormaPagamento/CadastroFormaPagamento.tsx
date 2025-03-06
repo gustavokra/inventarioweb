@@ -18,7 +18,7 @@ export default function CadastroFormaPagamento() {
 
     const returnToList = () => {
         setFormaPagamento(null)
-        navigate('/forma-pagamento')
+        navigate('/formas-pagamento')
     }
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export default function CadastroFormaPagamento() {
 
     const handleExecuteSucessSubmit = () => {
         setFormaPagamento(null);
-        navigate('/forma-pagamento');
+        navigate('/formas-pagamento');
     };
 
     const registerFormaPagamento = async (formaPagamentoDataToRegister: IFormaPagamento) => {
@@ -131,7 +131,7 @@ export default function CadastroFormaPagamento() {
     };
 
     return (
-        <section id='forma-pagamento' className='container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10'>
+        <section id='formas-pagamento' className='container w-3/4 mx-auto mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10'>
             <header>
                 <h3>Cadastro de Forma de Pagamento</h3>
                 {formaPagamento && admin &&

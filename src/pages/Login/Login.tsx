@@ -30,7 +30,6 @@ export default function Login() {
                 },
                 body: JSON.stringify(userData),
             });
-            console.log("chega aqui?")
             if (!response.ok) {
                 const errorData = await response.json();
                 toast({
@@ -49,7 +48,8 @@ export default function Login() {
                 title: "Sucesso",
                 description: "Logado com uscesso",
             });
-            navigate('/clients');
+            navigate('/clientes');
+            window.location.reload();
         } catch (error) {
             toast({
                 variant: "destructive",

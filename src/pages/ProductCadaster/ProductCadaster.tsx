@@ -137,7 +137,7 @@ export default function ProductCadaster() {
 
     const returnToList = () => {
         setProduct(null)
-        navigate("/products")
+        navigate("/produtos")
     }
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,7 +173,7 @@ export default function ProductCadaster() {
 
     const handleExecuteSucessSubmit = () => {
         setProduct(null);
-        navigate('/products');
+        navigate('/produtos');
     };
 
     const registerProduct = async (prodcutDataToRegister: IProduct) => {

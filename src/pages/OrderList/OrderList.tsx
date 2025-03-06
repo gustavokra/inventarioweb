@@ -56,12 +56,12 @@ export default function OrderList() {
     }, [reload]);
 
     const handleCadaster = () => {
-        navigate('/orders/cadaster');
+        navigate('/pedidos/cadastro');
     };
 
     const handleEdit = (order: IOrder) => {
         setOrder(order);
-        navigate('/orders/cadaster');
+        navigate('/pedidos/cadastro');
     }
 
     const handleCompleteOrder = async (order: IOrder) => {
@@ -152,7 +152,7 @@ export default function OrderList() {
                 {/* Header */}
                 <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4'>
                     <h1 className='text-2xl font-bold text-gray-900'>Pedidos</h1>
-                    <Button 
+                    <Button
                         onClick={handleCadaster}
                         className="bg-zinc-900 hover:bg-zinc-800 text-white transition-colors"
                     >
@@ -239,7 +239,7 @@ export default function OrderList() {
                         <TableHeader>
                             <TableRow className='bg-gray-50'>
                                 <TableHead className='w-1/12 text-left py-3 px-4 text-sm font-medium text-gray-900'>Id</TableHead>
-                                <TableHead 
+                                <TableHead
                                     className='w-2/12 text-left py-3 px-4 text-sm font-medium text-gray-900 cursor-pointer hover:bg-gray-100'
                                     onClick={() => setDateOrder(dateOrder === 'asc' ? 'desc' : 'asc')}
                                 >
@@ -257,7 +257,7 @@ export default function OrderList() {
                         <TableBody>
                             {paginatedOrders.map((order) => (
                                 <React.Fragment key={order.id}>
-                                    <TableRow 
+                                    <TableRow
                                         className='hover:bg-gray-50 transition-colors cursor-pointer'
                                         onClick={() => handleRowClick(order.id)}
                                     >
@@ -290,7 +290,7 @@ export default function OrderList() {
                                         <TableCell className='py-3 px-4' onClick={(e) => e.stopPropagation()}>
                                             <div className='flex justify-center gap-2'>
                                                 {order.enumStatus === 'PENDING' && (
-                                                    <Button 
+                                                    <Button
                                                         variant='destructive'
                                                         onClick={() => handleCompleteOrder(order)}
                                                         className='px-3 py-1 text-xs'
@@ -298,10 +298,10 @@ export default function OrderList() {
                                                         Finalizar
                                                     </Button>
                                                 )}
-                                                <Button 
+                                                <Button
                                                     variant="outline"
                                                     onClick={() => handleEdit(order)}
-                                                    className="border-green-600 text-green-700 hover:bg-green-600 hover:text-white transition-colors"
+                                                    className='px-3 py-1 text-xs text-gray-900 hover:text-gray-900 border-gray-200'
                                                 >
                                                     Editar
                                                 </Button>

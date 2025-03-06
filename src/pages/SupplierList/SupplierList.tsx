@@ -50,12 +50,12 @@ export default function SupplierList() {
     }, [reload]);
 
     const handleCadaster = () => {
-        navigate('/suppliers/cadaster');
+        navigate('/fornecedores/cadastro');
     };
 
     const handleEdit = (supplier: ISupplier) => {
         setSupplier(supplier);
-        navigate('/suppliers/cadaster');
+        navigate('/fornecedores/cadastro');
     }
 
     const handleChangeStatus = async (supplier: ISupplier) => {

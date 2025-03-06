@@ -73,31 +73,31 @@ export default function Header() {
                     {isAuthenticated ? (
                         <div className='hidden md:flex items-center space-x-8'>
                             <Link
-                                to={EnumPaginas.clients}
+                                to={EnumPaginas.clientes}
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Clientes
                             </Link>
                             <Link
-                                to={EnumPaginas.suppliers}
+                                to={EnumPaginas.fornecedores}
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Fornecedores
                             </Link>
                             <Link
-                                to={EnumPaginas.products}
+                                to={EnumPaginas.produtos}
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Produtos
                             </Link>
                             <Link
-                                to={EnumPaginas.formaPagamento}
+                                to={EnumPaginas.formasPagamento}
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Formas de Pagamento
                             </Link>
                             <Link
-                                to={EnumPaginas.orders}
+                                to={EnumPaginas.pedidos}
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Pedidos
@@ -131,12 +131,12 @@ export default function Header() {
                             >
                                 Login
                             </Link>
-                            <Link
-                                to="/register"
+                            {/* <Link
+                                to="/cadastro"
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Cadastrar
-                            </Link>
+                            </Link> */}
                         </div>
                     )}
 
@@ -181,35 +181,35 @@ export default function Header() {
                             {isAuthenticated ? (
                                 <>
                                     <Link
-                                        to={EnumPaginas.clients}
+                                        to={EnumPaginas.clientes}
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
                                         Clientes
                                     </Link>
                                     <Link
-                                        to={EnumPaginas.suppliers}
+                                        to={EnumPaginas.fornecedores}
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
                                         Fornecedores
                                     </Link>
                                     <Link
-                                        to={EnumPaginas.products}
+                                        to={EnumPaginas.produtos}
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
                                         Produtos
                                     </Link>
                                     <Link
-                                        to={EnumPaginas.formaPagamento}
+                                        to={EnumPaginas.formasPagamento}
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
                                         Formas de Pagamento
                                     </Link>
                                     <Link
-                                        to={EnumPaginas.orders}
+                                        to={EnumPaginas.pedidos}
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
@@ -264,13 +264,13 @@ export default function Header() {
                                     >
                                         Login
                                     </Link>
-                                    <Link
-                                        to="/register"
+                                    {/* <Link
+                                        to="/cadastro"
                                         className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                                         onClick={() => setShowMobileMenu(false)}
                                     >
                                         Cadastrar
-                                    </Link>
+                                    </Link> */}
                                 </>
                             )}
                         </div>
