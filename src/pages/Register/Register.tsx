@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 import '@/styles/utility.css';
 import { Label } from '@radix-ui/react-label';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
-
 
 export default function Register() {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const { toast } = useToast();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -37,12 +37,25 @@ export default function Register() {
             });
 
             if (!response.ok) {
-                throw new Error(`Erro: ${response.status}`);
+                const errorData = await response.json();
+                toast({
+                    variant: "destructive",
+                    title: "Erro ao logar. Tente novamente",
+                    description: errorData.details || JSON.stringify(errorData),
+                });
+                return;
             }
 
+            toast({
+                title: "Sucesso",
+                description: "Cadastro realizado com uscesso",
+            });
             navigate('/login');
         } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error);
+            toast({
+                variant: "destructive",
+                title: "Erro inesperado"
+            });
         }
     };
 
@@ -104,7 +117,7 @@ export default function Register() {
                     </div>
                 </section>
             </form>
-            
+
         </>
     );
 };

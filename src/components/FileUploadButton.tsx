@@ -43,7 +43,7 @@ const FileUploadButton = () => {
                         title: "Erro ao cadastrar",
                         description: errorData.details,
                     });
-    
+
                     return;
                 }
 
@@ -67,6 +67,7 @@ const FileUploadButton = () => {
                 className="hidden"
             />
             <Button
+                variant={'secondary'}
                 onClick={handleButtonClick}
             >
                 Importar XLSX
