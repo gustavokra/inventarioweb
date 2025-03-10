@@ -26,7 +26,7 @@ export default function Header() {
 
     const downloadBackup = async () => {
         try {
-            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/backup', {
+            const response = await fetch('http://localhost:8080/api/v1/backup', {
                 method: 'GET',
                 headers: {
                     'dbImpl': 'SQLITE',
@@ -131,12 +131,12 @@ export default function Header() {
                             >
                                 Login
                             </Link>
-                            {/* <Link
+                            <Link
                                 to="/cadastro"
                                 className='text-white hover:text-[var(--color-gray-100)] transition-colors'
                             >
                                 Cadastrar
-                            </Link> */}
+                            </Link>
                         </div>
                     )}
 

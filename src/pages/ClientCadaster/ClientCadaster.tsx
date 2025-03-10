@@ -47,7 +47,7 @@ export default function ClientCadaster() {
 
     const registerClient = async (clientDataToRegister: IClient, toast: any) => {
         try {
-            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/client', {
+            const response = await fetch('http://localhost:8080/api/v1/client', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function ClientCadaster() {
     const updateClient = async (clientDataToUpdate: IClient) => {
 
         try {
-            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/client', {
+            const response = await fetch('http://localhost:8080/api/v1/client', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export default function ClientCadaster() {
     const deleteClient = async () => {
 
         try {
-            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/client', {
+            const response = await fetch('http://localhost:8080/api/v1/client', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

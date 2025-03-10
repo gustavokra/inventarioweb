@@ -26,7 +26,7 @@ export default function ProductList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/product', {
+                const response = await fetch('http://localhost:8080/api/v1/product', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export default function ProductList() {
         }
 
         try {
-            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/product', {
+            const response = await fetch('http://localhost:8080/api/v1/product', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
