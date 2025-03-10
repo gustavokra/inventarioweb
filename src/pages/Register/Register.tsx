@@ -27,7 +27,7 @@ export default function Register() {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/v1/user', {
+            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -55,7 +55,7 @@ export default function SupplierCadaster() {
 
     const registerSupplier = async (supplierDataToRegister: ISupplier) => {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/supplier', {
+            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/supplier', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function SupplierCadaster() {
     const updateSupplier = async (supplierDataToUpdate: ISupplier) => {
 
         try {
-            const response = await fetch('http://localhost:8080/api/v1/supplier', {
+            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/supplier', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export default function SupplierCadaster() {
     const deleteSupplier = async () => {
 
         try {
-            const response = await fetch('http://localhost:8080/api/v1/supplier', {
+            const response = await fetch('https://inventario-web-ptax.onrender.com/api/v1/supplier', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
